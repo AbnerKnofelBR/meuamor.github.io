@@ -1,89 +1,223 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pedido de Namoro - Temporizador</title>
-  <style>
-    :root{--bg:#0b0810;--accent:#ff5b8a;--muted:#e9e7ee}
-    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue';background:var(--bg);color:var(--muted);}
-    .wrap{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
-    section{height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;padding:36px;box-sizing:border-box}
-
-    /* Play overlay */
-    #playOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:20px}
-    #playOverlay h2{font-size:24px;margin-bottom:18px;color:#fff}
-    #playOverlay button{padding:14px 28px;font-size:18px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer}
-
-    .next-btn{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:28px;cursor:pointer;display:flex;align-items:center}
-    .next-btn .arrow{display:inline-block;width:18px;height:18px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg)}
-
-    /* Hero */
-    #hero{background:linear-gradient(180deg,#2b0b1a,#140412);overflow:hidden}
-    .hero-content{max-width:900px;text-align:center}
-    .hero-title{font-size:36px;margin:0 0 16px 0;line-height:1.2}
-    .hero-desc{font-size:16px;opacity:0.95}
-    .hearts{pointer-events:none;position:absolute;inset:0;overflow:hidden}
-    .heart{position:absolute;width:18px;height:18px;background:transparent;transform:translateY(100vh);opacity:0.9}
-    .heart:before,.heart:after{content:'';position:absolute;width:12px;height:20px;background:var(--accent);border-radius:12px 12px 0 0}
-    .heart:before{left:4px;transform:rotate(-45deg)}
-    .heart:after{right:4px;transform:rotate(45deg)}
-
-    @media (max-width:600px){.hero-title{font-size:28px}.hero-desc{font-size:14px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedido de Namoro</title>
+<style>
+:root{--bg:#0b0810;--accent:#ff5b8a;--muted:#e9e7ee;}
+html,body{margin:0;padding:0;font-family:sans-serif;background:var(--bg);color:var(--muted);height:100%;overflow:hidden;}
+.wrap{height:100vh;width:100vw;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;}
+section{height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;padding:20px;box-sizing:border-box;}
+.next-btn{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);cursor:pointer;font-size:2em;color:var(--muted);}
+#hero{background:linear-gradient(180deg,#2b0b1a,#140412);overflow:hidden;text-align:center;}
+.hero-content h1{font-size:2.5em;margin-bottom:10px;}
+.hero-content p{font-size:1.2em;}
+.hearts{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.heart{position:absolute;width:20px;height:20px;background:transparent;transform:translateY(100vh);opacity:0.8;}
+.heart:before,.heart:after{content:'';position:absolute;width:12px;height:20px;background:var(--accent);border-radius:12px 12px 0 0;}
+.heart:before{left:4px;transform:rotate(-45deg);}
+.heart:after{right:4px;transform:rotate(45deg);}
+#gallery{background:linear-gradient(180deg,#1a0d16,#231022);}
+.carousel{display:flex;gap:10px;overflow-x:auto;padding:20px;scroll-snap-type:x mandatory;}
+.card{min-width:200px;height:300px;border-radius:12px;background:#fff;flex:0 0 auto;scroll-snap-align:center;overflow:hidden;}
+.card img{width:100%;height:100%;object-fit:cover;}
+#counter{background:linear-gradient(180deg,#081018,#071426);text-align:center;}
+.counter-inner{max-width:500px;}
+.squares{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px;}
+.sq{width:80px;height:80px;border-radius:10px;background:rgba(255,255,255,0.05);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.sq .val{font-size:1.2em;font-weight:700;}
+.sq .label{font-size:0.8em;}
+.prompt-card{background:rgba(255,255,255,0.05);padding:20px;border-radius:12px;text-align:center;margin-top:20px;}
+.btns{display:flex;gap:15px;justify-content:center;margin-top:15px;}
+button.btn{padding:10px 20px;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
+button.yes{background:var(--accent);color:#fff;}
+button.no{background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted);}
+#thanks{background:linear-gradient(180deg,#071216,#071216);text-align:center;}
+#thanks .btn.moveable{position:absolute;}
+#timer{background:linear-gradient(180deg,#071018,#08111a);text-align:center;}
+.timer-box{max-width:400px;background:rgba(255,255,255,0.02);padding:20px;border-radius:12px;margin-top:20px;}
+.time-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.time-item{width:60px;height:60px;border-radius:8px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.time-item .num{font-size:1em;font-weight:700;}
+.time-item .lbl{font-size:0.7em;}
+@media(max-width:600px){.hero-content h1{font-size:1.8em;}.hero-content p{font-size:1em;}.card{min-width:150px;height:200px;}.sq{width:60px;height:60px;}.time-item{width:50px;height:50px;}}
+</style>
 </head>
 <body>
-  <!-- Overlay de play -->
-  <div id="playOverlay">
-    <h2>Aperte play para iniciar a música 🎶</h2>
-    <button id="playMusic">▶️ Play</button>
-  </div>
+<div class="wrap">
 
-  <div class="wrap" id="wrap">
-    <!-- 1 Hero -->
-    <section id="hero">
-      <div class="hearts" id="hearts"></div>
-      <div class="hero-content">
-        <h1 class="hero-title">Seremos parceiros nessa aventura?</h1>
-        <p class="hero-desc">Desde o primeiro olhar, cada momento importa. Deslize para baixo e veja nossas lembranças.</p>
+<!-- Tela 1 -->
+<section id="hero">
+  <div class="hearts" id="hearts"></div>
+  <div class="hero-content">
+    <h1>Seremos parceiros nessa aventura?</h1>
+    <p>Desde o primeiro olhar, cada momento importa. Deslize para baixo e veja nossas lembranças.</p>
+  </div>
+  <div class="next-btn" data-target="gallery">⬇️</div>
+</section>
+
+<!-- Tela 2 -->
+<section id="gallery">
+  <div style="width:100%;text-align:center">
+    <h2>Algumas lembranças</h2>
+    <div class="carousel">
+      <div class="card"><img src="https://picsum.photos/300/400?random=1"></div>
+      <div class="card"><img src="https://picsum.photos/300/400?random=2"></div>
+      <div class="card"><img src="https://picsum.photos/300/400?random=3"></div>
+      <div class="card"><img src="https://picsum.photos/300/400?random=4"></div>
+    </div>
+  </div>
+  <div class="next-btn" data-target="counter">⬇️</div>
+</section>
+
+<!-- Tela 3 -->
+<section id="counter">
+  <div class="counter-inner">
+    <h2>Tempo desde que nos conhecemos</h2>
+    <div class="squares">
+      <div class="sq"><div class="val" id="years">0</div><div class="label">Anos</div></div>
+      <div class="sq"><div class="val" id="months">0</div><div class="label">Meses</div></div>
+      <div class="sq"><div class="val" id="days">0</div><div class="label">Dias</div></div>
+      <div class="sq"><div class="val" id="hours">00</div><div class="label">Horas</div></div>
+      <div class="sq"><div class="val" id="minutes">00</div><div class="label">Minutos</div></div>
+    </div>
+
+    <div class="prompt-card">
+      <h3>Deseja iniciar o temporizador do pedido de namoro?</h3>
+      <div class="btns">
+        <button class="btn yes" id="startTimer">Sim</button>
+        <button class="btn no" id="noBtn">Não</button>
       </div>
-      <div class="next-btn" data-target="gallery"><span class="arrow"></span></div>
-    </section>
-
-    <!-- outras sections (gallery, counter, prompt, thanks, timer) ficam aqui -->
+    </div>
   </div>
+</section>
 
-  <div id="player" style="display:none"></div>
+<!-- Tela de agradecimento -->
+<section id="thanks">
+  <h2>Obrigado por tudo 💛</h2>
+  <div style="position:relative;height:120px;">
+    <button class="btn yes" id="thanksYes" style="position:absolute;left:20%;top:30%;">Sim</button>
+    <button class="btn no moveable" id="thanksNo" style="position:absolute;left:60%;top:30%;">Não</button>
+  </div>
+</section>
 
-  <script>
-    (function(){
-      'use strict';
-      let player=null, ytReady=false;
+<!-- Tela do temporizador -->
+<section id="timer">
+  <div class="timer-box">
+    <h2>Cronômetro do Pedido</h2>
+    <div class="time-row">
+      <div class="time-item"><div class="num" id="t_months">0</div><div class="lbl">Meses</div></div>
+      <div class="time-item"><div class="num" id="t_days">0</div><div class="lbl">Dias</div></div>
+      <div class="time-item"><div class="num" id="t_hours">00</div><div class="lbl">Horas</div></div>
+      <div class="time-item"><div class="num" id="t_minutes">00</div><div class="lbl">Minutos</div></div>
+      <div class="time-item"><div class="num" id="t_seconds">00</div><div class="lbl">Segundos</div></div>
+    </div>
+  </div>
+</section>
 
-      function loadYouTubeAPI(){
-        window.onYouTubeIframeAPIReady=function(){
-          player=new YT.Player('player',{
-            height:'0',width:'0',videoId:'XdglM81b4g8',
-            playerVars:{'playsinline':1,'autoplay':0,'loop':1,'mute':0,'playlist':'XdglM81b4g8'},
-            events:{'onReady':function(){ytReady=true;}}
-          });
-        };
-        const s=document.createElement('script');
-        s.src='https://www.youtube.com/iframe_api';
-        document.head.appendChild(s);
-      }
-      loadYouTubeAPI();
+</div>
 
-      const playBtn=document.getElementById('playMusic');
-      const overlay=document.getElementById('playOverlay');
-      if(playBtn){
-        playBtn.addEventListener('click',()=>{
-          if(!ytReady||!player){alert('Carregando player... aguarde');return;}
-          try{player.playVideo();}catch(err){console.error(err);} 
-          overlay.style.display='none';
-        });
-      }
-    })();
-  </script>
+<!-- Player do YouTube -->
+<div id="player"></div>
+
+<script>
+// Navegação entre telas
+document.querySelectorAll('.next-btn').forEach(btn=>{
+  btn.addEventListener('click',()=> {
+    document.getElementById(btn.dataset.target).scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// Corações animados
+const heartsEl = document.getElementById('hearts');
+function makeHeart(){
+  const h = document.createElement('div'); h.className='heart';
+  const size = Math.random()*30+10;
+  h.style.width = size+'px'; h.style.height=size+'px';
+  h.style.left = Math.random()*100+'%'; h.style.bottom='-40px';
+  heartsEl.appendChild(h);
+  const dur = Math.random()*8+4;
+  const rot = (Math.random()*360-180).toFixed(2);
+  h.animate([{transform:'translateY(0) scale(1)',opacity:1},{transform:'translateY(-120vh) rotate('+rot+'deg) scale(0.8)',opacity:0}],{duration:dur*1000,iterations:1,easing:'linear'});
+  setTimeout(()=>{h.remove();},dur*1000+200);
+}
+setInterval(makeHeart,500);
+
+// Contador desde 18/01/2025
+const sinceDate = new Date(2025,0,18);
+function updateSince(){
+  const now = new Date();
+  let diff = now - sinceDate;
+  let d = Math.floor(diff/86400000);
+  let m = Math.floor(d/30); let y = Math.floor(m/12);
+  let h = now.getHours(), min=now.getMinutes();
+  document.getElementById('years').textContent=y;
+  document.getElementById('months').textContent=m%12;
+  document.getElementById('days').textContent=d%30;
+  document.getElementById('hours').textContent=String(h).padStart(2,'0');
+  document.getElementById('minutes').textContent=String(min).padStart(2,'0');
+}
+setInterval(updateSince,1000); updateSince();
+
+// YouTube autoplay fundo
+let player;
+function onYouTubeIframeAPIReady(){
+  player = new YT.Player('player',{
+    videoId:'XdglM81b4g8',
+    height:'0', width:'0',
+    playerVars:{autoplay:1,loop:1,playlist:'XdglM81b4g8',mute:0}
+  });
+}
+let tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api"; document.body.appendChild(tag);
+
+// Botões Sim / Não
+const startBtn = document.getElementById('startTimer');
+const noBtn = document.getElementById('noBtn');
+const thanks = document.getElementById('thanks');
+startBtn.addEventListener('click',()=>{
+  if(!localStorage.getItem('proposalStart')) localStorage.setItem('proposalStart',Date.now());
+  document.getElementById('timer').scrollIntoView({behavior:'smooth'});
+  initTimer();
+});
+noBtn.addEventListener('click',()=>{thanks.scrollIntoView({behavior:'smooth'});});
+const thanksYes = document.getElementById('thanksYes');
+const thanksNo = document.getElementById('thanksNo');
+thanksYes.addEventListener('click',()=>{
+  if(!localStorage.getItem('proposalStart')) localStorage.setItem('proposalStart',Date.now());
+  document.getElementById('timer').scrollIntoView({behavior:'smooth'});
+  initTimer();
+});
+thanksNo.addEventListener('mouseenter',()=>{
+  const parentRect = thanksNo.parentElement.getBoundingClientRect();
+  thanksNo.style.left = Math.random()*(parentRect.width-50)+'px';
+  thanksNo.style.top = Math.random()*(parentRect.height-30)+'px';
+});
+
+// Temporizador
+let timerInterval;
+function initTimer(){
+  const start = new Date(parseInt(localStorage.getItem('proposalStart')));
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    const now = new Date();
+    let totalSec = Math.floor((now - start)/1000);
+    const months = Math.floor(totalSec/(30*24*3600));
+    const days = Math.floor(totalSec/86400);
+    totalSec%=86400;
+    const hours = Math.floor(totalSec/3600);
+    totalSec%=3600;
+    const minutes = Math.floor(totalSec/60);
+    const seconds = totalSec%60;
+    document.getElementById('t_months').textContent=months;
+    document.getElementById('t_days').textContent=days;
+    document.getElementById('t_hours').textContent=String(hours).padStart(2,'0');
+    document.getElementById('t_minutes').textContent=String(minutes).padStart(2,'0');
+    document.getElementById('t_seconds').textContent=String(seconds).padStart(2,'0');
+  },1000);
+}
+if(localStorage.getItem('proposalStart')) initTimer();
+</script>
 </body>
 </html>
