@@ -1,257 +1,150 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>História de Amor</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-            height: 100vh;
-        }
-
-        section {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .background-heart {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .arrow-down {
-            font-size: 2rem;
-            position: absolute;
-            bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .arrow-down:hover {
-            transform: translateY(5px);
-        }
-
-        #section1 {
-            background-color: #ffccd5;
-        }
-
-        #section2 {
-            background-color: #ffecb3;
-        }
-
-        #section3 {
-            background-color: #e0f7fa;
-        }
-
-        #section4 {
-            background-color: #f1f8e9;
-        }
-
-        #section5 {
-            background-color: #f3e5f5;
-        }
-
-        .carousel {
-            width: 80%;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .carousel-images {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-
-        .carousel-images img {
-            width: 100%;
-            border-radius: 10px;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #ff4081;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #f50057;
-        }
-
-        /* Estilo para o fundo do Sistema Solar */
-        #solar-system {
-            width: 200px;
-            height: 200px;
-            background: #3f51b5;
-            border-radius: 50%;
-        }
-
-        /* Animações de corações subindo */
-        @keyframes hearts-moving {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100vh); }
-        }
-
-        .background-heart:before {
-            content: "❤️";
-            position: absolute;
-            top: 10%;
-            animation: hearts-moving 5s infinite;
-            font-size: 2rem;
-        }
-
-        .background-heart:after {
-            content: "❤️";
-            position: absolute;
-            top: 20%;
-            animation: hearts-moving 6s infinite;
-            font-size: 3rem;
-        }
-
-        #time-count {
-            font-size: 2rem;
-        }
-
-        #moon-phase {
-            width: 100px;
-            height: 100px;
-            background-color: #ff9800;
-            border-radius: 50%;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>História Especial</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: sans-serif; overflow-x: hidden; background: #000; color: #fff; }
+    section { height: 100vh; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; text-align: center; }
+    .hearts { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+    .heart { position: absolute; width: 20px; height: 20px; background: red; clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 80%, 20% 100%, 0% 35%); animation: float 10s linear infinite; }
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 1; }
+    }
+    .arrow { font-size: 2rem; margin-top: 2rem; animation: bounce 2s infinite; z-index: 1; }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+    .carousel { display: flex; overflow-x: auto; gap: 1rem; scroll-snap-type: x mandatory; }
+    .carousel img { width: 80vw; height: auto; scroll-snap-align: center; border-radius: 10px; }
+    .solar { position: relative; width: 200px; height: 200px; margin: 2rem auto; }
+    .sun { width: 50px; height: 50px; background: yellow; border-radius: 50%; position: absolute; top: 75px; left: 75px; z-index: 2; }
+    .earth { width: 30px; height: 30px; background: blue; border-radius: 50%; position: absolute; animation: orbit 10s linear infinite; }
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+    }
+    .stars { background: url('https://www.transparenttextures.com/patterns/stardust.png'); animation: moveStars 60s linear infinite; }
+    @keyframes moveStars {
+      0% { background-position: 0 0; }
+      100% { background-position: 1000px 1000px; }
+    }
+    .contador { display: flex; gap: 1rem; margin-top: 1rem; }
+    .contador div { background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: 5px; }
+    .lua { width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #999); margin: 1rem auto; }
+    .botoes { display: flex; gap: 2rem; margin-top: 2rem; }
+    button { padding: 1rem 2rem; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; }
+    .sim { background: green; color: #fff; }
+    .nao { background: red; color: #fff; }
+    #temporizador, #agradecimento { margin-top: 2rem; font-size: 1.2rem; }
+  </style>
 </head>
 <body>
 
-    <!-- Música de Fundo -->
-    <audio id="music" autoplay loop>
-        <source src="NX Zero - Cedo Ou Tarde.mp3" type="audio/mp3">
-    </audio>
+<audio autoplay loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
 
-    <!-- Seção 1: Corações e Introdução -->
-    <section id="section1">
-        <div class="background-heart">
-            <h1>Nosso Início</h1>
-            <p>Uma história que começa com o som do coração batendo...</p>
-            <a href="#section2" class="arrow-down">↓</a>
-        </div>
-    </section>
+<!-- Seção 1 -->
+<section>
+  <div class="hearts"></div>
+  <h1>O Início de Tudo</h1>
+  <p>Foi no dia 18/01/2025 que tudo começou...</p>
+  <div class="arrow">↓</div>
+</section>
 
-    <!-- Seção 2: Corações + Carrossel de Imagens -->
-    <section id="section2">
-        <div class="background-heart">
-            <div class="carousel">
-                <div class="carousel-images">
-                    <img src="imagem1.jpg" alt="Imagem 1">
-                    <img src="imagem2.jpg" alt="Imagem 2">
-                    <img src="imagem3.jpg" alt="Imagem 3">
-                </div>
-            </div>
-            <a href="#section3" class="arrow-down">↓</a>
-        </div>
-    </section>
+<!-- Seção 2 -->
+<section>
+  <div class="hearts"></div>
+  <h2>Momentos Compartilhados</h2>
+  <div class="carousel">
+    <img src="img1.jpg" alt="Foto 1">
+    <img src="img2.jpg" alt="Foto 2">
+    <img src="img3.jpg" alt="Foto 3">
+  </div>
+  <div class="arrow">↓</div>
+</section>
 
-    <!-- Seção 3: Sistema Solar e Contagem -->
-    <section id="section3">
-        <div class="background-stars">
-            <h1>O Planeta Terra e o Sistema Solar</h1>
-            <p>O tempo está passando...</p>
-            <div id="solar-system"></div>
-            <div id="time-count">
-                <div>Data: 18/01/2025</div>
-                <div id="time"></div>
-            </div>
-            <a href="#section4" class="arrow-down">↓</a>
-        </div>
-    </section>
+<!-- Seção 3 -->
+<section class="stars">
+  <div class="hearts"></div>
+  <h2>Nosso Universo</h2>
+  <p>Desde aquele dia, o tempo tem girado ao nosso redor</p>
+  <div class="solar">
+    <div class="sun"></div>
+    <div class="earth"></div>
+  </div>
+  <div class="contador">
+    <div id="meses">0 meses</div>
+    <div id="dias">0 dias</div>
+    <div id="horas">0h</div>
+    <div id="minutos">0min</div>
+    <div id="segundos">0s</div>
+  </div>
+  <div class="arrow">↓</div>
+</section>
 
-    <!-- Seção 4: Fase da Lua -->
-    <section id="section4">
-        <div class="background-heart">
-            <h1>A Fase da Lua na Noite de 18/01/2025</h1>
-            <p>O momento mágico...</p>
-            <div id="moon-phase"></div>
-            <a href="#section5" class="arrow-down">↓</a>
-        </div>
-    </section>
+<!-- Seção 4 -->
+<section>
+  <div class="hearts"></div>
+  <h2>A Fase da Lua</h2>
+  <p>Na noite em que nos conhecemos, a lua estava assim:</p>
+  <div class="lua"></div>
+  <div class="arrow">↓</div>
+</section>
 
-    <!-- Seção 5: Pergunta Final -->
-    <section id="section5">
-        <div class="background-heart">
-            <h1>Vamos Continuar Essa História?</h1>
-            <p>Será que estamos prontos?</p>
-            <button id="yes-button">Sim</button>
-            <button id="no-button">Não</button>
-        </div>
-    </section>
+<!-- Seção 5 -->
+<section>
+  <div class="hearts"></div>
+  <h2>Você quer continuar essa história?</h2>
+  <p>Essa jornada só faz sentido se for com você.</p>
+  <div class="botoes">
+    <button class="sim" onclick="iniciarContador()">Sim</button>
+    <button class="nao" onclick="encerrar()">Não</button>
+  </div>
+  <div id="temporizador"></div>
+  <div id="agradecimento"></div>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/build/three.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Carrossel de Imagens
-            let currentIndex = 0;
-            const images = document.querySelectorAll('.carousel-images img');
-            setInterval(() => {
-                currentIndex = (currentIndex + 1) % images.length;
-                document.querySelector('.carousel-images').style.transform = `translateX(-${currentIndex * 100}%)`;
-            }, 3000);
+<script>
+  // Corações subindo
+  for (let i = 0; i < 30; i++) {
+    let heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+    document.querySelectorAll('.hearts').forEach(h => h.appendChild(heart.cloneNode()));
+  }
 
-            // Contagem de tempo a partir de 18/01/2025
-            const startDate = new Date('2025-01-18T00:00:00');
-            const timeDisplay = document.getElementById('time');
-            function updateTime() {
-                const now = new Date();
-                const diff = startDate - now;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                timeDisplay.textContent = `Faltam ${days} dias, ${hours} horas, ${minutes} minutos, ${seconds} segundos`;
-            }
-            setInterval(updateTime, 1000);
+  // Contador desde 18/01/2025
+  function atualizarContador() {
+    const inicio = new Date('2025-01-18T00:00:00');
+    const agora = new Date();
+    const diff = agora - inicio;
+    const meses = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const horas = agora.getHours();
+    const minutos = agora.getMinutes();
+    const segundos = agora.getSeconds();
+    document.getElementById('meses').textContent = `${meses} meses`;
+    document.getElementById('dias').textContent = `${dias} dias`;
+    document.getElementById('horas').textContent = `${horas}h`;
+    document.getElementById('minutos').textContent = `${minutos}min`;
+    document.getElementById('segundos').textContent = `${segundos}s`;
+  }
+  setInterval(atualizarContador, 1000);
 
-            // Ação do botão "Sim" na seção 5
-            document.getElementById('yes-button').addEventListener('click', function () {
-                let countdownDate = new Date().getTime() + 90 * 24 * 60 * 60 * 1000;  // 90 dias
-                let interval = setInterval(function() {
-                    let now = new Date().getTime();
-                    let distance = countdownDate - now;
-                    if (distance <= 0) {
-                        clearInterval(interval);
-                        alert('Chegou a hora de pedir em namoro!');
-                    }
-                }, 1000);
-                alert("Contagem regressiva para o pedido de namoro iniciada!");
-            });
-
-            // Ação do botão "Não"
-            document.getElementById('no-button').addEventListener('click', function () {
-                alert("Obrigado por sua resposta!");
-                setTimeout(() => {
-                    window.location.href = "https://www.youtube.com/watch?v=rh_lqF8kBwc&list=RDrh_lqF8kBwc&start_radio=1";
-                }, 10000);  // Espera 10 segundos
-            });
-        });
-    </script>
-</body>
-</html>
-
+  // Temporizador de 3 meses
+  function iniciarContador() {
+    const destino = new Date();
+    destino.setMonth(destino.getMonth() + 3);
+    const intervalo = setInterval(() => {
+      const agora = new Date();
+      const restante = destino - agora;
+      if (restante <= 0) {
+        clearInterval(intervalo);
+        document.getElementById('temporizador').textContent = "Chegou a hora!
