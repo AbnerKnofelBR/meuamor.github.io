@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pedido de Namoro - Temporizador (corrigido)</title>
+  <style>
+    :root{--bg:#0b0810;--accent:#ff5b8a;--muted:#e9e7ee}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue';background:var(--bg);color:var(--muted);}
+    .wrap{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
+    section{height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;padding:36px;box-sizing:border-box}
+    .next-btn{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:28px;cursor:pointer;display:flex;align-items:center}
+    .next-btn .arrow{display:inline-block;width:18px;height:18px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg)}
+
+    /* Hero */
+    #hero{background:linear-gradient(180deg,#2b0b1a,#140412);overflow:hidden}
+    .hero-content{max-width:900px;text-align:center}
+    .hero-title{font-size:48px;margin:0 0 16px 0;line-height:1.05}
+    .hero-desc{font-size:18px;opacity:0.95}
+    .hearts{pointer-events:none;position:absolute;inset:0;overflow:hidden}
+    .heart{position:absolute;width:18px;height:18px;background:transparent;transform:translateY(100vh);opacity:0.9}
+    .heart:before,.heart:after{content:'';position:absolute;width:12px;height:20px;background:var(--accent);border-radius:12px 12px 0 0}
+    .heart:before{left:4px;transform:rotate(-45deg)}
+    .heart:after{right:4px;transform:rotate(45deg)}
+
+    /* Gallery */
+    #gallery{background:linear-gradient(180deg,#1a0d16,#231022)}
+    .carousel{display:flex;gap:16px;overflow-x:auto;padding:24px 8px;scroll-snap-type:x mandatory}
+    .card{min-width:300px;height:420px;border-radius:12px;background:#fff;flex:0 0 auto;scroll-snap-align:center;overflow:hidden}
+    .card img{width:100%;height:100%;object-fit:cover}
+
+    /* Counter/date */
+    #counter{background:linear-gradient(180deg,#081018,#071426);text-align:center}
+    .counter-inner{max-width:880px}
+    .squares{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+    .sq{width:120px;height:120px;border-radius:12px;background:rgba(255,255,255,0.04);display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .sq .val{font-size:20px;font-weight:700}
+    .sq .label{font-size:12px;opacity:0.9}
+
+    /* Prompt */
+    #prompt{background:linear-gradient(180deg,#25121c,#160913)}
+    .prompt-card{max-width:760px;background:rgba(255,255,255,0.03);padding:26px;border-radius:14px;text-align:center}
+    .btns{display:flex;gap:12px;justify-content:center;margin-top:16px}
+    button.btn{padding:12px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+    .btn.yes{background:var(--accent);color:#fff}
+    .btn.no{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
+
+    /* Thanks page */
+    #thanks{background:linear-gradient(180deg,#071216,#071216)}
+    .thanks-inner{max-width:700px;text-align:center}
+    .moving{position:relative}
+    .moving .btn.no.moveable{position:absolute}
+
+    /* Timer page */
+    #timer{background:linear-gradient(180deg,#071018,#08111a);text-align:center}
+    .timer-box{max-width:820px;background:rgba(255,255,255,0.02);padding:22px;border-radius:12px}
+    .time-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+    .time-item{width:140px;height:90px;border-radius:10px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .time-item .num{font-size:18px;font-weight:800}
+    .time-item .lbl{font-size:12px;opacity:0.9}
+
+    .play-music{position:fixed;right:18px;bottom:18px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.04);backdrop-filter:blur(6px);cursor:pointer}
+
+    .muted{opacity:0.85;color:#ddd}
+
+    @media (max-width:600px){.hero-title{font-size:30px}.sq{width:88px;height:88px}.card{min-width:240px;height:300px}}
+  </style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <!-- 1 Hero -->
+    <section id="hero">
+      <div class="hearts" id="hearts"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">Seremos parceiros nessa aventura?</h1>
+        <p class="hero-desc">Desde o primeiro olhar, cada momento importa. Deslize para baixo e veja nossas lembranças.</p>
+      </div>
+      <div class="next-btn" data-target="gallery"><span class="arrow"></span></div>
+    </section>
+
+    <!-- 2 Gallery -->
+    <section id="gallery">
+      <div style="width:100%;max-width:1100px;text-align:center">
+        <h2>Algumas lembranças</h2>
+        <div class="carousel" id="carousel">
+          <div class="card"><img src="https://picsum.photos/800/600?random=11" alt="img1"></div>
+          <div class="card"><img src="https://picsum.photos/800/600?random=12" alt="img2"></div>
+          <div class="card"><img src="https://picsum.photos/800/600?random=13" alt="img3"></div>
+        </div>
+      </div>
+      <div class="next-btn" data-target="counter"><span class="arrow"></span></div>
+    </section>
+
+    <!-- 3 Counter from 18/01/2025 -->
+    <section id="counter">
+      <div class="counter-inner">
+        <h2>Tempo desde que nos conhecemos</h2>
+        <p class="muted">Contando em tempo real desde <strong>18/01/2025</strong></p>
+        <div class="squares" id="sinceBoxes">
+          <div class="sq"><div class="val" id="years">0</div><div class="label">Anos</div></div>
+          <div class="sq"><div class="val" id="months">0</div><div class="label">Meses</div></div>
+          <div class="sq"><div class="val" id="days">0</div><div class="label">Dias</div></div>
+          <div class="sq"><div class="val" id="time">00:00:00</div><div class="label">HH:MM:SS</div></div>
+        </div>
+      </div>
+      <div class="next-btn" data-target="prompt"><span class="arrow"></span></div>
+    </section>
+
+    <!-- 4 Prompt to start temporizador -->
+    <section id="prompt">
+      <div class="prompt-card">
+        <h2>Deseja iniciar o temporizador para o pedido de namoro?</h2>
+        <p class="muted">Se escolher SIM, o temporizador será iniciado e gravado. Será possível ver o temporizador em outra tela.</p>
+        <div class="btns">
+          <button class="btn yes" id="startTimer">Sim</button>
+          <button class="btn no" id="goThanks">Não</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 Thanks / decline with tricky NO button -->
+    <section id="thanks">
+      <div class="thanks-inner">
+        <h2>Obrigado por tudo 💛</h2>
+        <p class="muted">Se quiser, você ainda pode iniciar o temporizador.</p>
+        <div style="position:relative;height:120px;margin-top:18px">
+          <button class="btn yes" id="thanksYes" style="position:absolute;left:20%;top:30%">Sim</button>
+          <button class="btn no moveable" id="thanksNo" style="position:absolute;left:60%;top:30%">Não</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 Timer page (simula outra página) -->
+    <section id="timer">
+      <div class="timer-box">
+        <h2>Cronômetro do Pedido</h2>
+        <p class="muted">Mostrando desde o primeiro clique que iniciou o temporizador. Também mostramos a contagem de 3 meses a partir da data de início.</p>
+        <div class="time-row">
+          <div class="time-item"><div class="num" id="t_months">0</div><div class="lbl">Meses<br> (desde início)</div></div>
+          <div class="time-item"><div class="num" id="t_days">0</div><div class="lbl">Dias</div></div>
+          <div class="time-item"><div class="num" id="t_hours">00</div><div class="lbl">Horas</div></div>
+          <div class="time-item"><div class="num" id="t_minutes">00</div><div class="lbl">Minutos</div></div>
+          <div class="time-item"><div class="num" id="t_seconds">00</div><div class="lbl">Segundos</div></div>
+        </div>
+        <p class="muted" style="margin-top:12px">Contagem regressiva até 3 meses após a data de início:</p>
+        <div class="time-row" style="margin-top:10px">
+          <div class="time-item"><div class="num" id="c_m">0</div><div class="lbl">Meses</div></div>
+          <div class="time-item"><div class="num" id="c_d">0</div><div class="lbl">Dias</div></div>
+          <div class="time-item"><div class="num" id="c_h">00</div><div class="lbl">Horas</div></div>
+          <div class="time-item"><div class="num" id="c_min">00</div><div class="lbl">Minutos</div></div>
+          <div class="time-item"><div class="num" id="c_s">00</div><div class="lbl">Segundos</div></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="player" style="display:none"></div>
+  <div class="play-music" id="playMusic">▶️ Tocar música</div>
+
+  <script>
+    // Wrap everything to ensure DOM is ready and to catch initialization errors
+    (function(){
+      'use strict';
+
+      // global error handler to surface issues while debugging
+      window.addEventListener('error', function(e){
+        // Avoid the generic "Script error." by logging full details for same-origin errors
+        try{ console.error('Window error:', e.message, 'at', e.filename+':'+e.lineno+':'+e.colno, e.error); }catch(_){ console.error('Window error (unknown)'); }
+      });
+
+      document.addEventListener('DOMContentLoaded', function(){
+        try{
+          // Navigation buttons
+          const nextBtns = document.querySelectorAll('.next-btn');
+          if(nextBtns && nextBtns.length){
+            nextBtns.forEach(btn=>{
+              btn.addEventListener('click', function(){
+                const targetId = btn.dataset && btn.dataset.target;
+                if(!targetId) return;
+                const target = document.getElementById(targetId);
+                if(target) target.scrollIntoView({behavior:'smooth'});
+              });
+            });
+          }
+
+          // Hearts animation (only if container exists)
+          const heartsEl = document.getElementById('hearts');
+          if(heartsEl){
+            function makeHeart(){
+              const h = document.createElement('div'); h.className='heart';
+              const size = Math.random()*30+10; h.style.width=size+'px'; h.style.height=size+'px';
+              // place relative to container width
+              h.style.left = Math.random()*100+'%'; h.style.bottom = '-40px';
+              heartsEl.appendChild(h);
+              const dur = Math.random()*10+6;
+              const rot = (Math.random()*360-180).toFixed(2);
+              const transformEnd = 'translateY(-120vh) rotate(' + rot + 'deg) scale(0.8)';
+              try{
+                h.animate([
+                  {transform:'translateY(0) scale(1)',opacity:1},
+                  {transform: transformEnd, opacity:0.1}
+                ],{duration:dur*1000,iterations:1,easing:'linear'});
+              }catch(err){
+                // some browsers may not support Element.animate
+                h.style.transition = 'transform ' + (dur) + 's linear, opacity ' + (dur) + 's linear';
+                h.style.transform = transformEnd;
+                h.style.opacity = '0.1';
+              }
+              setTimeout(()=>{ try{ h.remove(); }catch(e){} }, dur*1000+400);
+            }
+            // Create hearts but keep reference to interval so we can clear if needed
+            const heartInterval = setInterval(makeHeart, 500);
+            // optional: clearInterval when leaving page (not strictly necessary)
+            window.addEventListener('beforeunload', ()=>{ clearInterval(heartInterval); });
+          }
+
+          // COUNTER since fixed date 18/01/2025
+          const sinceDate = new Date(2025,0,18,0,0,0); // january is 0
+          const yearsEl = document.getElementById('years');
+          const monthsEl = document.getElementById('months');
+          const daysEl = document.getElementById('days');
+          const timeEl = document.getElementById('time');
+
+          function updateSince(){
+            try{
+              const now = new Date();
+              let y = now.getFullYear() - sinceDate.getFullYear();
+              let m = now.getMonth() - sinceDate.getMonth();
+              let d = now.getDate() - sinceDate.getDate();
+              let h = now.getHours() - sinceDate.getHours();
+              let min = now.getMinutes() - sinceDate.getMinutes();
+              let s = now.getSeconds() - sinceDate.getSeconds();
+              if(s<0){s+=60; min-=1}
+              if(min<0){min+=60; h-=1}
+              if(h<0){h+=24; d-=1}
+              if(d<0){
+                const prev = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+                d += prev; m -=1;
+              }
+              if(m<0){ m+=12; y-=1 }
+              if(yearsEl) yearsEl.textContent = String(y);
+              if(monthsEl) monthsEl.textContent = String(m);
+              if(daysEl) daysEl.textContent = String(d);
+              if(timeEl) timeEl.textContent = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            }catch(err){ console.error('updateSince error', err); }
+          }
+          // start updating only if the elements exist
+          if(yearsEl && monthsEl && daysEl && timeEl){ updateSince(); setInterval(updateSince, 1000); }
+
+          // START temporizador: store first click ever as proposalStart
+          const startBtn = document.getElementById('startTimer');
+          if(startBtn){
+            startBtn.addEventListener('click', ()=>{
+              try{
+                let stored = localStorage.getItem('proposalStart');
+                if(!stored){ localStorage.setItem('proposalStart', String(Date.now())); }
+                const timerSec = document.getElementById('timer');
+                if(timerSec) timerSec.scrollIntoView({behavior:'smooth'});
+                initTimers();
+              }catch(err){ console.error('startBtn click error', err); }
+            });
+          }
+
+          // THANKS flow (go to thanks)
+          const goThanks = document.getElementById('goThanks');
+          if(goThanks){
+            goThanks.addEventListener('click', ()=>{
+              const th = document.getElementById('thanks'); if(th) th.scrollIntoView({behavior:'smooth'});
+            });
+          }
+
+          // thanksYes -> start as well
+          const thanksYes = document.getElementById('thanksYes');
+          if(thanksYes){
+            thanksYes.addEventListener('click', ()=>{
+              try{
+                let stored = localStorage.getItem('proposalStart');
+                if(!stored){ localStorage.setItem('proposalStart', String(Date.now())); }
+                const timerSec = document.getElementById('timer'); if(timerSec) timerSec.scrollIntoView({behavior:'smooth'});
+                initTimers();
+              }catch(err){ console.error('thanksYes click error', err); }
+            });
+          }
+
+          // moving NO button to avoid clicks (both thank-you screen and first prompt 'No' button that led to thanks)
+          const noBtn = document.getElementById('thanksNo');
+          if(noBtn){
+            function moveNo(){
+              try{
+                const container = noBtn.parentElement || noBtn.offsetParent || document.body;
+                const rect = container.getBoundingClientRect();
+                const maxX = Math.max(rect.width - noBtn.offsetWidth - 4, 0);
+                const maxY = Math.max(rect.height - noBtn.offsetHeight - 4, 0);
+                const nx = Math.random() * maxX;
+                const ny = Math.random() * maxY;
+                noBtn.style.left = nx + 'px';
+                noBtn.style.top = ny + 'px';
+              }catch(err){ console.error('moveNo error', err); }
+            }
+            noBtn.addEventListener('mouseenter', moveNo);
+            noBtn.addEventListener('click', moveNo);
+          }
+
+          // Timer page logic: show time since proposalStart and countdown to +3 months
+          let timerInterval = null;
+          function initTimers(){
+            try{
+              const stored = localStorage.getItem('proposalStart');
+              if(!stored) return;
+              const start = new Date(parseInt(stored,10));
+
+              function update(){
+                try{
+                  const now = new Date();
+                  const totalSec = Math.floor((now - start)/1000);
+                  const months = (now.getFullYear()-start.getFullYear())*12 + (now.getMonth()-start.getMonth());
+                  const days = Math.floor(totalSec/86400);
+                  let rem = totalSec % 86400;
+                  const hours = Math.floor(rem/3600); rem%=3600;
+                  const mins = Math.floor(rem/60); const secs = rem%60;
+
+                  const tMonthsEl = document.getElementById('t_months'); if(tMonthsEl) tMonthsEl.textContent = String(months);
+                  const tDaysEl = document.getElementById('t_days'); if(tDaysEl) tDaysEl.textContent = String(days);
+                  const tHoursEl = document.getElementById('t_hours'); if(tHoursEl) tHoursEl.textContent = String(hours).padStart(2,'0');
+                  const tMinEl = document.getElementById('t_minutes'); if(tMinEl) tMinEl.textContent = String(mins).padStart(2,'0');
+                  const tSecEl = document.getElementById('t_seconds'); if(tSecEl) tSecEl.textContent = String(secs).padStart(2,'0');
+
+                  // countdown until start + 3 months (approx using Date)
+                  const end = new Date(start.getFullYear(), start.getMonth()+3, start.getDate(), start.getHours(), start.getMinutes(), start.getSeconds());
+                  let diff = Math.floor((end - now)/1000);
+                  if(diff < 0) diff = 0;
+                  const monthsLeft = Math.floor(diff / (30*24*3600));
+                  const dd = Math.floor(diff/86400); let r = diff % 86400;
+                  const hh = Math.floor(r/3600); r%=3600; const mm = Math.floor(r/60); const ss = r%60;
+
+                  const cM = document.getElementById('c_m'); if(cM) cM.textContent = String(monthsLeft);
+                  const cD = document.getElementById('c_d'); if(cD) cD.textContent = String(dd);
+                  const cH = document.getElementById('c_h'); if(cH) cH.textContent = String(hh).padStart(2,'0');
+                  const cMin = document.getElementById('c_min'); if(cMin) cMin.textContent = String(mm).padStart(2,'0');
+                  const cS = document.getElementById('c_s'); if(cS) cS.textContent = String(ss).padStart(2,'0');
+
+                }catch(err){ console.error('timer update error', err); }
+              }
+
+              if(timerInterval) clearInterval(timerInterval);
+              update(); timerInterval = setInterval(update, 1000);
+            }catch(err){ console.error('initTimers error', err); }
+          }
+
+          if(localStorage.getItem('proposalStart')) initTimers();
+
+          // YouTube background player (load script safely)
+          let player = null; let ytReady = false;
+          function loadYouTubeAPI(){
+            try{
+              // set up callback
+              window.onYouTubeIframeAPIReady = function(){
+                try{
+                  player = new YT.Player('player',{
+                    height: '0', width: '0',
+                    videoId: 'YOUR_VIDEO_ID_HERE',
+                    playerVars: {'playsinline':1,'autoplay':0,'loop':1,'mute':1,'playlist':'YOUR_VIDEO_ID_HERE'},
+                    events: { 'onReady': function(){ ytReady = true; } }
+                  });
+                }catch(err){ console.error('YT player init error', err); }
+              };
+
+              const s = document.createElement('script');
+              s.src = 'https://www.youtube.com/iframe_api';
+              s.async = true;
+              s.onerror = function(ev){ console.error('Failed to load YouTube API', ev); };
+              document.head.appendChild(s);
+            }catch(err){ console.error('loadYouTubeAPI error', err); }
+          }
+          loadYouTubeAPI();
+
+          // play music button
+          const playMusicBtn = document.getElementById('playMusic');
+          function tryPlayMusic(){
+            try{
+              if(!ytReady || !player) return;
+              player.playVideo();
+              if(playMusicBtn) playMusicBtn.style.display = 'none';
+            }catch(err){ console.warn('tryPlayMusic failed', err); }
+          }
+          if(playMusicBtn){
+            playMusicBtn.addEventListener('click', function(){
+              if(!ytReady) { alert('Carregando player... tente novamente em alguns segundos.'); return; }
+              tryPlayMusic();
+            });
+          }
+          // attempt after first user gesture
+          window.addEventListener('click', function(){ tryPlayMusic(); }, {once:true});
+
+          // initial focus
+          const hero = document.getElementById('hero'); if(hero) hero.scrollIntoView();
+
+        }catch(err){ console.error('Initialization failed:', err); }
+      }); // DOMContentLoaded
+    })();
+  </script>
+</body>
+</html>
