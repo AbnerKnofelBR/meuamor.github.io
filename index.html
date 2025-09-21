@@ -2,464 +2,79 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>Pedido de Namoro — Mobile</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Temporizador — Pedido</title>
 <style>
-  :root{
-    --bg:#050417;
-    --accent:#ff5b8a;
-    --muted:#dfe7f5;
-    --glass: rgba(255,255,255,0.04);
-  }
-  /* Reset & layout */
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue';-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--muted)}
-  .wrap{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
-  section{height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;position:relative}
-  .card{z-index:3;max-width:920px;width:100%;text-align:center}
-  h1{font-size:22px;margin:8px 0}
-  p{font-size:14px;opacity:0.95;margin:6px 0}
-  /* arrows */
-  .arrow-btn{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;width:48px;height:48px;border-radius:24px;background:var(--glass);display:flex;align-items:center;justify-content:center;z-index:5}
-  .arrow-svg{width:18px;height:18px;stroke:var(--muted);stroke-width:2;fill:none}
-  /* hearts background (fixed) */
-  .hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-  .heart{position:absolute;width:18px;height:18px;opacity:0.95}
-  /* general styles for sections */
-  #sec1{background:linear-gradient(180deg,#14021a,#050417);display:flex;align-items:center;justify-content:center}
-  #sec2{background:linear-gradient(180deg,#0f0b14,#070316);display:flex;flex-direction:column;align-items:center;justify-content:center}
-  #sec3{background:radial-gradient(circle at 20% 20%, #071026, #000011);display:flex;flex-direction:column;align-items:center;padding-top:28px}
-  #sec4{background:linear-gradient(180deg,#000316,#050417);display:flex;flex-direction:column;align-items:center;justify-content:center}
-  #sec5{background:linear-gradient(180deg,#060317,#050417);display:flex;flex-direction:column;align-items:center;justify-content:center}
-  /* carousel */
-  .carousel{display:flex;gap:12px;overflow-x:auto;padding:12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;z-index:3}
-  .slide{flex:0 0 85%;min-width:85%;height:60vh;border-radius:14px;overflow:hidden;scroll-snap-align:center;background:#222}
-  .slide img{width:100%;height:100%;object-fit:cover;display:block}
-  /* solar canvas */
-  #solar-canvas{width:100%;max-width:680px;height:320px;border-radius:12px;background:transparent;display:block;z-index:3}
-  .squares{display:flex;gap:8px;flex-wrap:nowrap;justify-content:center;margin-top:12px;z-index:3}
-  .sq{width:64px;height:64px;border-radius:8px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .sq .val{font-weight:700;color:#fff}
-  .sq .lbl{font-size:11px;color:#d6d9e6;opacity:0.95}
-  /* phase canvas */
-  #phase-canvas{width:220px;height:220px;border-radius:999px;background:transparent;display:block;margin:12px auto;z-index:3}
-  #phase-label{color:#dce6f8;margin-top:8px;z-index:3}
-  /* prompt and buttons */
-  .prompt{background:var(--glass);padding:14px;border-radius:12px;text-align:center;z-index:3}
-  .btns{display:flex;gap:12px;margin-top:12px;justify-content:center}
-  .btn{padding:10px 14px;border-radius:10px;border:0;font-weight:700;min-width:110px}
-  .btn.yes{background:var(--accent);color:#fff}
-  .btn.no{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
-  /* timer panel */
-  .timer-panel{position:fixed;left:12px;right:12px;bottom:18px;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);padding:10px;border-radius:12px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:8px;z-index:50}
-  .timebox{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:8px;font-weight:800}
-  /* sound control */
-  #soundControl{position:fixed;right:12px;bottom:18px;background:var(--glass);padding:10px;border-radius:10px;z-index:60;cursor:pointer;color:var(--muted)}
-  @media(max-width:420px){
-    h1{font-size:20px} .slide{min-width:90%} #solar-canvas{height:260px}
-  }
+:root{--bg:#040318;--accent:#ff5b8a;--muted:#e6eefc;--card:rgba(255,255,255,0.03)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--muted)}
+.container{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:22px;box-sizing:border-box}
+h1{font-size:20px;margin:10px 0}
+.timer-box{margin-top:18px;background:var(--card);padding:16px;border-radius:12px;width:100%;max-width:420px;text-align:center}
+.time-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.time-item{width:70px;height:70px;border-radius:8px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800}
+.btn{margin-top:14px;padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:#fff}
+.small{font-size:13px;opacity:0.9;margin-top:8px}
 </style>
 </head>
 <body>
+<div class="container">
+  <h1>Contagem regressiva — Pedido</h1>
+  <p class="small">O temporizador contabiliza 3 meses desde que você iniciou o temporizador (armazenado no navegador).</p>
 
-<!-- YouTube hidden container (API will insert iframe) -->
-<div id="yt-player" style="display:none"></div>
-
-<!-- hearts layer (fixed) -->
-<div class="hearts" id="hearts"></div>
-
-<!-- main vertical pages -->
-<div class="wrap" id="wrap">
-
-  <!-- SECTION 1 -->
-  <section id="sec1">
-    <div class="card">
-      <h1>Nossa História</h1>
-      <p>Cada momento importou desde o primeiro dia. Deslize para baixo e veja nossas lembranças e o universo que celebramos.</p>
+  <div class="timer-box">
+    <div class="time-row">
+      <div class="time-item"><div id="mVal">0</div><div style="font-size:12px">Meses</div></div>
+      <div class="time-item"><div id="dVal">0</div><div style="font-size:12px">Dias</div></div>
+      <div class="time-item"><div id="hVal">00</div><div style="font-size:12px">Horas</div></div>
+      <div class="time-item"><div id="minVal">00</div><div style="font-size:12px">Min</div></div>
+      <div class="time-item"><div id="sVal">00</div><div style="font-size:12px">Seg</div></div>
     </div>
-    <div class="arrow-btn" data-target="sec2" title="Descer">
-      <svg class="arrow-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-  </section>
 
-  <!-- SECTION 2 - carousel -->
-  <section id="sec2">
-    <div class="card">
-      <h1>Lembranças</h1>
-      <p>Passe as fotos com o dedo.</p>
-      <div class="carousel" id="carousel">
-        <div class="slide"><img src="https://picsum.photos/800/1200?random=11" alt="foto1"></div>
-        <div class="slide"><img src="https://picsum.photos/800/1200?random=12" alt="foto2"></div>
-        <div class="slide"><img src="https://picsum.photos/800/1200?random=13" alt="foto3"></div>
-      </div>
-    </div>
-    <div class="arrow-btn" data-target="sec3" title="Descer">
-      <svg class="arrow-svg" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-  </section>
-
-  <!-- SECTION 3 - solar + counter -->
-  <section id="sec3">
-    <div style="width:100%;max-width:720px;text-align:center">
-      <div class="card">
-        <h1>O nosso universo</h1>
-        <p>Uma ilustração do sistema solar — abaixo a contagem desde <strong>18/01/2025</strong>.</p>
-      </div>
-      <canvas id="solar-canvas"></canvas>
-      <div class="squares" aria-hidden="true">
-        <div class="sq"><div class="val" id="cnt-months">0</div><div class="lbl">Meses</div></div>
-        <div class="sq"><div class="val" id="cnt-days">0</div><div class="lbl">Dias</div></div>
-        <div class="sq"><div class="val" id="cnt-hours">00</div><div class="lbl">Horas</div></div>
-        <div class="sq"><div class="val" id="cnt-mins">00</div><div class="lbl">Minutos</div></div>
-        <div class="sq"><div class="val" id="cnt-secs">00</div><div class="lbl">Segundos</div></div>
-      </div>
-    </div>
-    <div class="arrow-btn" data-target="sec4" title="Descer">
-      <svg class="arrow-svg" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-  </section>
-
-  <!-- SECTION 4 - Earth + Moon + phase -->
-  <section id="sec4">
-    <div style="width:100%;max-width:520px;text-align:center">
-      <h1>Terra e Lua</h1>
-      <p>A fase lunar na noite em que nos conhecemos (18/01/2025).</p>
-      <canvas id="phase-canvas" width="220" height="220"></canvas>
-      <div id="phase-label"></div>
-    </div>
-    <div class="arrow-btn" data-target="sec5" title="Descer">
-      <svg class="arrow-svg" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
-  </section>
-
-  <!-- SECTION 5 - prompt -->
-  <section id="sec5">
-    <div class="prompt" role="dialog" aria-labelledby="ask-title">
-      <h1 id="ask-title">Quer continuar essa história?</h1>
-      <p>Se você disser <strong>Sim</strong>, iniciaremos uma contagem regressiva de 3 meses até o pedido.</p>
-      <div class="btns">
-        <button class="btn yes" id="btn-yes">Sim</button>
-        <button class="btn no" id="btn-no">Não</button>
-      </div>
-    </div>
-  </section>
-
-</div>
-
-<!-- timer panel (bottom) -->
-<div id="timerPanel" class="timer-panel" style="display:none">
-  <div class="left">Tempo restante</div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <div class="timebox" id="tv-months">0M</div>
-    <div class="timebox" id="tv-days">0D</div>
-    <div class="timebox" id="tv-hours">00H</div>
-    <div class="timebox" id="tv-mins">00M</div>
-    <div class="timebox" id="tv-secs">00S</div>
+    <button id="resetBtn" class="btn">Definir agora como início</button>
+    <div class="small">Obrigado por acreditar nessa história ❤️</div>
   </div>
 </div>
 
-<!-- sound control -->
-<div id="soundControl" title="Ativar/Desativar som">🔊</div>
-
 <script>
-/* ============================
-   Scroll arrows behavior
-   ============================ */
-document.querySelectorAll('.arrow-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=> {
-    const target = btn.dataset.target;
-    if(target && document.getElementById(target)) document.getElementById(target).scrollIntoView({behavior:'smooth'});
-  });
-});
-
-/* ============================
-   Hearts background (fixed)
-   ============================ */
-const heartsRoot = document.getElementById('hearts');
-function spawnHeart(){
-  const el = document.createElement('div'); el.className='heart';
-  el.innerHTML = '<svg viewBox="0 0 32 29" width="100%" height="100%"><path d="M23.6 2.7c-2.2-.1-4.3 1.1-5.6 2.7-1.3-1.6-3.4-2.8-5.6-2.7C6.6 2.8 4 6 4 9.9c0 8 12.8 14.6 12.8 14.6S29.6 17.9 29.6 9.9c0-3.9-2.6-7.1-6-7.2z" fill="#ff6b96"/></svg>';
-  const size = (Math.random()*18)+12;
-  el.style.width = size + 'px';
-  el.style.height = size + 'px';
-  el.style.left = Math.random()*100 + '%';
-  el.style.bottom = '-20px';
-  heartsRoot.appendChild(el);
-  const travel = 80 + Math.random()*60;
-  const dur = 5000 + Math.random()*7000;
-  el.animate([{transform: 'translateY(0) scale(1)', opacity:1}, {transform: `translateY(-${travel}vh) scale(0.8)`, opacity:0.05}], {duration:dur, easing:'linear'}).onfinish = ()=> el.remove();
+function ensureStart(){
+  let stored = localStorage.getItem('proposalStart');
+  if(!stored){ const now=Date.now(); localStorage.setItem('proposalStart', String(now)); stored = String(now); }
+  return new Date(parseInt(stored,10));
 }
-setInterval(spawnHeart, 650);
 
-/* ============================
-   Carousel - native scroll-snap (no JS needed)
-   ============================ */
-
-/* ============================
-   COUNTER since 18/01/2025 (months/days/h:m:s)
-   exact months difference handled by month arithmetic
-   ============================ */
-const startSince = new Date(2025,0,18,0,0,0); // 18 Jan 2025
-function updateSince(){
-  const now = new Date();
-  let months = (now.getFullYear() - startSince.getFullYear())*12 + (now.getMonth() - startSince.getMonth());
-  if(now.getDate() < startSince.getDate()) months--;
-  // compute last month boundary
-  let last = new Date(startSince.getFullYear(), startSince.getMonth()+months, startSince.getDate(), startSince.getHours(), startSince.getMinutes(), startSince.getSeconds());
-  if(isNaN(last)) last = new Date(startSince.getTime());
-  let diff = Math.max(0, Math.floor((now - last)/1000));
-  const days = Math.floor(diff/86400);
-  diff %= 86400;
-  const hours = Math.floor(diff/3600); diff %=3600;
-  const mins = Math.floor(diff/60);
-  const secs = diff%60;
-  document.getElementById('cnt-months').textContent = months;
-  document.getElementById('cnt-days').textContent = days;
-  document.getElementById('cnt-hours').textContent = String(hours).padStart(2,'0');
-  document.getElementById('cnt-mins').textContent = String(mins).padStart(2,'0');
-  document.getElementById('cnt-secs').textContent = String(secs).padStart(2,'0');
-}
-setInterval(updateSince, 1000);
-updateSince();
-
-/* ============================
-   SOLAR SYSTEM canvas (visual)
-   ============================ */
-const canvas = document.getElementById('solar-canvas');
-const ctx = canvas.getContext('2d');
-function resizeCanvas(){
-  canvas.width = Math.min(window.innerWidth - 36, 720);
-  canvas.height = Math.round(Math.max(220, canvas.width * 0.45));
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-const planets = [
-  {name:'Merc',r:4,orbit:36,spd:0.03,color:'#bdbdbd'},
-  {name:'Ven',r:6,orbit:58,spd:0.02,color:'#f4c97f'},
-  {name:'Earth',r:8,orbit:88,spd:0.015,color:'#6fb3ff'},
-  {name:'Mars',r:6,orbit:115,spd:0.012,color:'#ff6b5b'},
-  {name:'Jup',r:10,orbit:150,spd:0.009,color:'#e4a86a'},
-  {name:'Sat',r:9,orbit:185,spd:0.007,color:'#d9c48a'}
-];
-let ang = 0;
-function drawSolar(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  // background stars
-  ctx.fillStyle = '#010217'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  for(let i=0;i<60;i++){
-    ctx.fillStyle = 'rgba(255,255,255,0.03)';
-    ctx.fillRect((i*47)%canvas.width, (i*29)%canvas.height, 1,1);
-  }
-  const cx = canvas.width/2, cy = canvas.height/2;
-  // sun
-  const sunR = 16;
-  const g = ctx.createRadialGradient(cx,cy,1,cx,cy,sunR*2.2);
-  g.addColorStop(0,'#fff7d0'); g.addColorStop(0.6,'#ffd07a'); g.addColorStop(1,'#ffad3d');
-  ctx.beginPath(); ctx.fillStyle = g; ctx.arc(cx,cy,sunR,0,Math.PI*2); ctx.fill();
-  // planets
-  planets.forEach((p,i)=>{
-    const orbitR = p.orbit * (canvas.width/720);
-    ctx.beginPath(); ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth=1; ctx.arc(cx,cy,orbitR,0,Math.PI*2); ctx.stroke();
-    const a = ang * p.spd + i;
-    const x = cx + Math.cos(a)*orbitR;
-    const y = cy + Math.sin(a)*orbitR*0.7;
-    ctx.beginPath(); ctx.fillStyle = p.color; ctx.arc(x,y,p.r,0,Math.PI*2); ctx.fill();
-  });
-  // Earth & Moon (draw moon)
-  const earth = planets[2];
-  const eOrbit = earth.orbit * (canvas.width/720);
-  const ea = ang * earth.spd + 2.5;
-  const ex = cx + Math.cos(ea)*eOrbit;
-  const ey = cy + Math.sin(ea)*eOrbit*0.7;
-  const moonOrbit = 18 * (canvas.width/720);
-  const ma = ang * 0.06 + 3.2;
-  const mx = ex + Math.cos(ma)*moonOrbit;
-  const my = ey + Math.sin(ma)*moonOrbit*0.7;
-  ctx.beginPath(); ctx.fillStyle = '#cfcfcf'; ctx.arc(mx,my,3.6,0,Math.PI*2); ctx.fill();
-  // small label "Terra"
-  ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.font='12px system-ui'; ctx.fillText('Terra', ex+12, ey-8);
-
-  ang += 0.9;
-  requestAnimationFrame(drawSolar);
-}
-requestAnimationFrame(drawSolar);
-
-/* ============================
-   MOON phase for 18/01/2025 and render
-   ============================ */
-function moonPhaseOnDate(d){
-  // approximate algorithm: synodic month
-  const year = d.getUTCFullYear();
-  let month = d.getUTCMonth()+1;
-  let day = d.getUTCDate() + d.getUTCHours()/24 + d.getUTCMinutes()/(24*60);
-  let Y = year, M = month;
-  if(M <= 2){ Y = year-1; M = month+12; }
-  const A = Math.floor(Y/100);
-  const B = 2 - A + Math.floor(A/4);
-  const jd = Math.floor(365.25*(Y+4716)) + Math.floor(30.6001*(M+1)) + day + B - 1524.5;
-  const synodic = 29.530588853;
-  const knownNew = 2451549.5; // reference
-  let age = (jd - knownNew) % synodic;
-  if(age < 0) age += synodic;
-  const phase = age / synodic;
-  const illum = (1 - Math.cos(phase * 2 * Math.PI)) / 2;
-  return {age, phase, illum};
-}
-function renderPhaseCanvas(date){
-  const c = document.getElementById('phase-canvas');
-  const ctxp = c.getContext('2d');
-  const cx = c.width/2, cy = c.height/2, R = Math.min(c.width,c.height)/2 - 6;
-  ctxp.clearRect(0,0,c.width,c.height);
-  // dark disk
-  ctxp.beginPath(); ctxp.fillStyle = '#111827'; ctxp.arc(cx,cy,R,0,Math.PI*2); ctxp.fill();
-  const mp = moonPhaseOnDate(date);
-  const illum = mp.illum;
-  // draw illuminated disc
-  ctxp.save();
-  ctxp.beginPath(); ctxp.fillStyle = '#f6f9ff'; ctxp.arc(cx,cy,R,0,Math.PI*2); ctxp.fill();
-  ctxp.globalCompositeOperation = 'destination-out';
-  const offset = (1 - illum) * R * 1.8 * (illum < 0.5 ? -1 : 1);
-  ctxp.beginPath(); ctxp.arc(cx + offset, cy, R*1.03, 0, Math.PI*2); ctxp.fill();
-  ctxp.restore();
-  // border
-  ctxp.beginPath(); ctxp.strokeStyle = 'rgba(0,0,0,0.4)'; ctxp.lineWidth = 1; ctxp.arc(cx,cy,R,0,Math.PI*2); ctxp.stroke();
-  // label
-  const label = getPhaseName(mp.phase);
-  document.getElementById('phase-label').textContent = `Fase em 18/01/2025: ${label} — ${Math.round(mp.illum*100)}% iluminada`;
-}
-function getPhaseName(p){
-  if(p < 0.03 || p > 0.97) return 'Lua Nova';
-  if(p < 0.25) return 'Lua Crescente';
-  if(p < 0.27) return 'Quarto Crescente';
-  if(p < 0.48) return 'Lua Gibosa Crescente';
-  if(p < 0.52) return 'Lua Cheia';
-  if(p < 0.73) return 'Lua Gibosa Minguante';
-  if(p < 0.75) return 'Quarto Minguante';
-  return 'Lua Minguante';
-}
-renderPhaseCanvas(new Date(Date.UTC(2025,0,18,0,0,0)));
-
-/* ============================
-   YouTube background player (muted autoplay attempt)
-   - plays muted on load; user can unmute with control
-   ============================ */
-let ytPlayer = null;
-let ytReady = false;
-function onYouTubeIframeAPIReady(){
-  ytPlayer = new YT.Player('yt-player', {
-    height: '0', width: '0',
-    videoId: 'XdglM81b4g8',
-    playerVars: {autoplay:1,loop:1,playlist:'XdglM81b4g8',controls:0,rel:0,modestbranding:1,playsinline:1},
-    events: {
-      onReady: (e)=>{ try{ e.target.mute(); e.target.playVideo(); }catch(err){} ytReady=true; },
-      onStateChange: (e)=>{ if(e.data===YT.PlayerState.ENDED){ try{ ytPlayer.playVideo(); }catch(_){} } }
-    }
-  });
-}
-(function loadYT(){
-  const s = document.createElement('script'); s.src = "https://www.youtube.com/iframe_api"; s.async=true; document.head.appendChild(s);
-})();
-
-// sound control: toggle mute/unmute and play
-const soundControl = document.getElementById('soundControl');
-soundControl.addEventListener('click', ()=>{
-  if(!ytReady || !ytPlayer){ alert('Aguarde... carregando áudio.'); return; }
-  try{
-    if(ytPlayer.isMuted()){
-      ytPlayer.unMute();
-      soundControl.textContent = '🔇';
-    } else {
-      ytPlayer.mute();
-      soundControl.textContent = '🔊';
-    }
-    ytPlayer.playVideo();
-  }catch(e){ console.warn(e); }
-});
-
-// try to unmute/play on first user gesture if possible
-function firstGestureUnmute(){
-  if(ytReady && ytPlayer){
-    try{ ytPlayer.unMute(); ytPlayer.playVideo(); soundControl.textContent='🔇'; }catch(_){}
-  }
-  window.removeEventListener('touchstart', firstGestureUnmute);
-  window.removeEventListener('click', firstGestureUnmute);
-}
-window.addEventListener('touchstart', firstGestureUnmute,{passive:true});
-window.addEventListener('click', firstGestureUnmute,{passive:true});
-
-/* ============================
-   FINAL: YES / NO behavior and 3-month timer
-   ============================ */
-const btnYes = document.getElementById('btn-yes');
-const btnNo = document.getElementById('btn-no');
-const timerPanel = document.getElementById('timerPanel');
-
-btnNo.addEventListener('click', ()=> {
-  // redirect (replace with desired URL)
-  window.location.href = 'https://example.com';
-});
-
-let countdownInterval = null;
-function startThreeMonthCountdown(startTimestamp){
-  if(!localStorage.getItem('proposalStart')) localStorage.setItem('proposalStart', String(startTimestamp));
-  const start = new Date(parseInt(localStorage.getItem('proposalStart')));
+let interval = null;
+function startTimer(){
+  const start = ensureStart();
   const end = new Date(start.getFullYear(), start.getMonth()+3, start.getDate(), start.getHours(), start.getMinutes(), start.getSeconds());
-  timerPanel.style.display = 'flex';
-  if(countdownInterval) clearInterval(countdownInterval);
+  if(interval) clearInterval(interval);
   function tick(){
     const now = new Date();
     let diff = Math.floor((end - now)/1000);
     if(diff < 0) diff = 0;
     const monthsLeft = Math.floor(diff / (30*24*3600));
-    const daysLeft = Math.floor(diff/86400);
+    const daysLeft = Math.floor(diff / 86400);
     let rem = diff % 86400;
     const hours = Math.floor(rem/3600); rem%=3600;
     const mins = Math.floor(rem/60); const secs = rem%60;
-    document.getElementById('tv-months').textContent = monthsLeft + 'M';
-    document.getElementById('tv-days').textContent = daysLeft + 'D';
-    document.getElementById('tv-hours').textContent = String(hours).padStart(2,'0') + 'H';
-    document.getElementById('tv-mins').textContent = String(mins).padStart(2,'0') + 'M';
-    document.getElementById('tv-secs').textContent = String(secs).padStart(2,'0') + 'S';
-    if(diff === 0){
-      clearInterval(countdownInterval);
-      alert('Os 3 meses terminaram — hora do pedido! ❤️');
-    }
+    document.getElementById('mVal').textContent = monthsLeft;
+    document.getElementById('dVal').textContent = daysLeft;
+    document.getElementById('hVal').textContent = String(hours).padStart(2,'0');
+    document.getElementById('minVal').textContent = String(mins).padStart(2,'0');
+    document.getElementById('sVal').textContent = String(secs).padStart(2,'0');
+    if(diff === 0){ clearInterval(interval); alert('Os 3 meses terminaram — hora do pedido! ❤️'); }
   }
   tick();
-  countdownInterval = setInterval(tick, 1000);
+  interval = setInterval(tick,1000);
 }
 
-btnYes.addEventListener('click', ()=>{
-  const now = Date.now();
-  if(!localStorage.getItem('proposalStart')) localStorage.setItem('proposalStart', String(now));
-  startThreeMonthCountdown(now);
-  // show thanks overlay message briefly (or scroll)
-  alert('Temporizador iniciado. Obrigado por continuar essa história ❤️');
-  document.getElementById('sec3').scrollIntoView({behavior:'smooth'});
+startTimer();
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  localStorage.setItem('proposalStart', String(Date.now()));
+  if(interval) clearInterval(interval);
+  startTimer();
 });
-
-/* ============================
-   Moveable "No" in thanks section (if you want to add)
-   ============================ */
-const thanksNoBtn = document.getElementById('thanksNo');
-if(thanksNoBtn){
-  const parent = thanksNoBtn.parentElement;
-  function moveNo(){
-    const p = parent.getBoundingClientRect();
-    thanksNoBtn.style.left = Math.random()*(p.width-80) + 'px';
-    thanksNoBtn.style.top = Math.random()*(p.height-40) + 'px';
-  }
-  thanksNoBtn.addEventListener('mouseenter', moveNo);
-  thanksNoBtn.addEventListener('click', moveNo);
-}
-
-/* ============================
-   Optional: restore timer if stored
-   ============================ */
-if(localStorage.getItem('proposalStart')){
-  startThreeMonthCountdown(parseInt(localStorage.getItem('proposalStart')));
-}
 </script>
 </body>
 </html>
