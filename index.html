@@ -5,282 +5,164 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nossa História ❤️</title>
   <style>
-    body, html {
-      margin: 0; padding: 0;
-      overflow-x: hidden;
-      font-family: Arial, sans-serif;
-      background: black;
-      color: white;
-      scroll-behavior: smooth;
-    }
-    section {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 { font-size: 2em; margin-bottom: 10px; }
-    p { font-size: 1.1em; max-width: 90%; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:Arial, sans-serif;overflow-x:hidden;}
 
-    /* Setas */
-    .arrow {
-      position: absolute;
-      bottom: 20px;
-      width: 30px; height: 30px;
-      border-left: 4px solid white;
-      border-bottom: 4px solid white;
-      transform: rotate(-45deg);
-      animation: bounce 1s infinite;
+    /* Fundo de corações */
+    .hearts{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      overflow:hidden;z-index:-1;
     }
-    @keyframes bounce {
-      0%,100%{transform:translateY(0) rotate(-45deg);}
-      50%{transform:translateY(10px) rotate(-45deg);}
+    .heart{
+      position:absolute;width:20px;height:20px;
+      background:red;opacity:0.7;
+      transform:rotate(45deg);
+      animation:float 8s infinite;
     }
-
-    /* Corações */
-    .heart {
-      position: absolute;
-      width: 20px; height: 20px;
-      background: red;
-      transform: rotate(45deg);
-      animation: float 10s linear infinite;
-      opacity: 0.7;
+    .heart::before,.heart::after{
+      content:"";position:absolute;width:20px;height:20px;
+      background:red;border-radius:50%;
     }
-    .heart::before, .heart::after {
-      content: "";
-      position: absolute;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: red;
-    }
-    .heart::before { top: -10px; left: 0; }
-    .heart::after { left: -10px; top: 0; }
-    @keyframes float {
+    .heart::before{top:-10px;left:0;}
+    .heart::after{left:-10px;top:0;}
+    @keyframes float{
       0%{transform:translateY(100vh) rotate(45deg);}
       100%{transform:translateY(-10vh) rotate(45deg);}
     }
 
+    section{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;color:#fff;position:relative;}
+    .arrow{margin-top:20px;font-size:30px;color:white;animation:bounce 2s infinite;}
+    @keyframes bounce{
+      0%,100%{transform:translateY(0);}
+      50%{transform:translateY(10px);}
+    }
+    .player{position:fixed;bottom:0;width:100%;background:#111;padding:5px;text-align:center;z-index:1000;}
+
     /* Carrossel */
-    .carousel {
-      display: flex; overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      width: 100%; height: 70%;
-    }
-    .carousel img {
-      flex: none;
-      width: 80%; height: auto;
-      margin: 0 10%;
-      scroll-snap-align: center;
-      border-radius: 10px;
-    }
+    .carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;}
+    .carousel img{flex:0 0 80%;max-width:300px;border-radius:10px;scroll-snap-align:center;}
 
     /* Sistema solar */
-    .solar {
-      width: 200px; height: 200px;
-      position: relative;
-      border-radius: 50%;
-      border: 1px dashed rgba(255,255,255,0.3);
-      animation: spin 20s linear infinite;
-    }
-    .earth {
-      width: 25px; height: 25px;
-      background: blue; border-radius: 50%;
-      position: absolute; top: -12px; left: 50%;
-      transform: translateX(-50%);
-    }
-    .sun {
-      width: 60px; height: 60px;
-      background: yellow; border-radius: 50%;
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    @keyframes spin {
-      0% { transform: rotate(0); }
-      100% { transform: rotate(360deg); }
-    }
-    .countdown {
-      display: flex; gap: 5px; margin-top: 20px; flex-wrap: wrap;
-    }
-    .countdown div {
-      background: rgba(255,255,255,0.2);
-      padding: 5px 10px;
-      border-radius: 5px;
-      font-size: 0.9em;
-    }
+    .solar{position:relative;width:250px;height:250px;border-radius:50%;animation:spin 20s linear infinite;}
+    .sun{position:absolute;top:50%;left:50%;width:50px;height:50px;margin:-25px;background:yellow;border-radius:50%;}
+    .earth{position:absolute;top:0;left:50%;width:30px;height:30px;background:blue;border-radius:50%;transform:translateX(-50%);}
+    @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
-    /* Terra e Lua */
-    .earth-moon { position: relative; width: 200px; height: 200px; }
-    .terra {
-      width: 50px; height: 50px;
-      background: blue; border-radius: 50%;
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .lua {
-      width: 20px; height: 20px;
-      background: gray; border-radius: 50%;
-      position: absolute; top: 10%; left: 80%;
-      animation: orbit 5s linear infinite;
-    }
-    @keyframes orbit {
-      from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
-      to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
-    }
+    .stars{background:black url('https://www.transparenttextures.com/patterns/stardust.png');animation:moveStars 60s linear infinite;}
+    @keyframes moveStars{from{background-position:0 0;}to{background-position:10000px 5000px;}}
 
-    /* Player fixo */
-    #player-container {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(0,0,0,0.8);
-      text-align: center; z-index: 9999;
-    }
+    .countdown{display:flex;gap:10px;margin-top:15px;}
+    .countdown div{background:#222;padding:10px;border-radius:8px;}
+
+    /* Lua */
+    .moon-scene{display:flex;flex-direction:column;align-items:center;}
+    .moon{width:80px;height:80px;border-radius:50%;background:gray;box-shadow:inset -20px 0 30px rgba(0,0,0,0.7);}
 
     /* Botões */
-    button {
-      padding: 12px 25px; margin: 10px;
-      font-size: 1.1em;
-      border: none; border-radius: 5px;
-      cursor: pointer;
-    }
-    .sim { background: green; color: white; }
-    .nao { background: red; color: white; }
-
-    /* Temporizador */
-    #temporizador { display: none; flex-direction: column; }
+    .buttons button{padding:10px 20px;margin:10px;border:none;border-radius:5px;font-size:18px;cursor:pointer;}
+    .yes{background:green;color:white;}
+    .no{background:red;color:white;}
   </style>
 </head>
 <body>
-  <!-- Player do YouTube -->
-  <div id="player-container">
-    <div id="player"></div>
+
+<div class="hearts"></div>
+
+<!-- Player YouTube -->
+<div class="player">
+  <iframe width="100%" height="60" src="https://www.youtube.com/embed/XdglM81b4g8?autoplay=1&loop=1&playlist=XdglM81b4g8"
+   frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+
+<!-- Tela 1 -->
+<section style="background:pink;">
+  <h1>Nossa História ❤️</h1>
+  <p>Um começo especial que mudou tudo...</p>
+  <div class="arrow">↓</div>
+</section>
+
+<!-- Tela 2 -->
+<section style="background:#ff69b4;">
+  <h2>Momentos Especiais</h2>
+  <div class="carousel">
+    <img src="https://via.placeholder.com/300x200" alt="foto1">
+    <img src="https://via.placeholder.com/300x200" alt="foto2">
+    <img src="https://via.placeholder.com/300x200" alt="foto3">
   </div>
+  <div class="arrow">↓</div>
+</section>
 
-  <!-- Seção 1 -->
-  <section>
-    <h1>Nosso Início ❤️</h1>
-    <p>Aqui começa a nossa linda história...</p>
-    <div class="arrow"></div>
-  </section>
+<!-- Tela 3 -->
+<section class="stars">
+  <h2>Nosso Universo 🌍☀️</h2>
+  <p>Desde 18/01/2025 o tempo não para...</p>
+  <div class="solar">
+    <div class="sun"></div>
+    <div class="earth"></div>
+  </div>
+  <div class="countdown" id="countdown"></div>
+  <div class="arrow">↓</div>
+</section>
 
-  <!-- Seção 2 -->
-  <section>
-    <h1>Nossas Memórias</h1>
-    <div class="carousel">
-      <img src="https://placekitten.com/300/200">
-      <img src="https://placekitten.com/301/200">
-      <img src="https://placekitten.com/302/200">
-    </div>
-    <div class="arrow"></div>
-  </section>
+<!-- Tela 4 -->
+<section style="background:#111;">
+  <h2>Lua daquela noite 🌙</h2>
+  <p>No dia 18/01/2025 a lua estava assim...</p>
+  <div class="moon-scene">
+    <div class="moon"></div>
+  </div>
+  <div class="arrow">↓</div>
+</section>
 
-  <!-- Seção 3 -->
-  <section>
-    <h1>Nosso Universo</h1>
-    <p>O tempo desde que nos conhecemos</p>
-    <div class="solar">
-      <div class="sun"></div>
-      <div class="earth"></div>
-    </div>
-    <div class="countdown" id="countup"></div>
-    <div class="arrow"></div>
-  </section>
+<!-- Tela 5 -->
+<section style="background:#333;">
+  <h2>Quer continuar essa história? 💕</h2>
+  <p>Sua resposta vai mudar nosso destino...</p>
+  <div class="buttons">
+    <button class="yes" onclick="responder('sim')">Sim</button>
+    <button class="no" onclick="responder('nao')">Não</button>
+  </div>
+</section>
 
-  <!-- Seção 4 -->
-  <section>
-    <h1>A Lua do Nosso Encontro</h1>
-    <p>No dia 18/01/2025 a Lua estava em: <strong>Lua Crescente</strong></p>
-    <div class="earth-moon">
-      <div class="terra"></div>
-      <div class="lua"></div>
-    </div>
-    <div class="arrow"></div>
-  </section>
+<script>
+  // Fundo corações
+  const hearts=document.querySelector('.hearts');
+  for(let i=0;i<20;i++){
+    let h=document.createElement('div');h.className='heart';
+    h.style.left=Math.random()*100+'vw';
+    h.style.animationDuration=(5+Math.random()*5)+'s';
+    hearts.appendChild(h);
+  }
 
-  <!-- Seção 5 -->
-  <section>
-    <h1>Quer continuar nossa história?</h1>
-    <p>Essa é a pergunta mais importante ❤️</p>
-    <button class="sim" onclick="iniciarSim()">Sim</button>
-    <button class="nao" onclick="iniciarNao()">Não</button>
-  </section>
+  // Countdown desde 18/01/2025
+  function updateCountdown(){
+    const start=new Date("2025-01-18T00:00:00").getTime();
+    const now=new Date().getTime();
+    let diff=now-start;
 
-  <!-- Nova página temporizador -->
-  <section id="temporizador" style="background:black;">
-    <h1>Contagem para o nosso pedido ❤️</h1>
-    <div id="timer"></div>
-    <p>Obrigado por me dizer sim! 🥰</p>
-  </section>
+    let months=Math.floor(diff/(1000*60*60*24*30));
+    let days=Math.floor((diff%(1000*60*60*24*30))/(1000*60*60*24));
+    let hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+    let mins=Math.floor((diff%(1000*60*60))/(1000*60));
+    let secs=Math.floor((diff%(1000*60))/1000);
 
-  <!-- Script -->
-  <script>
-    // YouTube Player
-    let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '0', width: '0',
-        videoId: 'XdglM81b4g8',
-        playerVars: { autoplay: 1, loop: 1, playlist: 'XdglM81b4g8' },
-        events: { onReady: e => e.target.playVideo() }
-      });
+    document.getElementById("countdown").innerHTML=
+      `<div>${months}M</div><div>${days}D</div><div>${hours}H</div><div>${mins}Min</div><div>${secs}S</div>`;
+  }
+  setInterval(updateCountdown,1000);
+
+  // Botões resposta
+  function responder(resp){
+    if(resp==='sim'){
+      window.location.href="temporizador.html";
+      window.location.href="mailto:seuemail@dominio.com?subject=Resposta&body=Ela disse SIM! ❤️";
+    } else {
+      alert("Obrigado por tudo 💕");
+      setTimeout(()=>{window.location.href="https://google.com";},10000);
+      window.location.href="mailto:seuemail@dominio.com?subject=Resposta&body=Ela disse NÃO 😢";
     }
-    let tag=document.createElement('script');
-    tag.src="https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
+  }
+</script>
 
-    // Corações
-    for (let i=0; i<25; i++){
-      let heart = document.createElement("div");
-      heart.className="heart";
-      heart.style.left=Math.random()*100+"vw";
-      heart.style.animationDuration=(5+Math.random()*5)+"s";
-      document.body.appendChild(heart);
-    }
-
-    // Contador desde 18/01/2025
-    const startDate = new Date("2025-01-18T00:00:00");
-    setInterval(()=>{
-      let now = new Date();
-      let diff = now - startDate;
-      let s = Math.floor(diff/1000);
-      let m = Math.floor(s/60); let h = Math.floor(m/60);
-      let d = Math.floor(h/24); let mo = Math.floor(d/30);
-      document.getElementById("countup").innerHTML = `
-        <div>${mo}m</div><div>${d%30}d</div>
-        <div>${h%24}h</div><div>${m%60}m</div><div>${s%60}s</div>`;
-    },1000);
-
-    // Botão SIM
-    function iniciarSim(){
-      enviarResposta("sim");
-      document.querySelectorAll("section").forEach(s=>s.style.display="none");
-      document.getElementById("temporizador").style.display="flex";
-      let target = new Date();
-      target.setMonth(target.getMonth()+3);
-      setInterval(()=>{
-        let now = new Date();
-        let diff = target - now;
-        if(diff<=0){document.getElementById("timer").innerText="Chegou o grande dia! ❤️";return;}
-        let s=Math.floor(diff/1000);
-        let m=Math.floor(s/60);let h=Math.floor(m/60);
-        let d=Math.floor(h/24);
-        document.getElementById("timer").innerText=`${d}d ${h%24}h ${m%60}m ${s%60}s`;
-      },1000);
-    }
-
-    // Botão NÃO
-    function iniciarNao(){
-      enviarResposta("nao");
-      alert("Obrigado por tudo ❤️");
-      setTimeout(()=>{window.location.href="https://www.youtube.com/watch?v=rh_lqF8kBwc&list=RDrh_lqF8kBwc&start_radio=1";},10000);
-    }
-
-    // Enviar resposta por email
-    function enviarResposta(opcao){
-      window.location.href=`mailto:abner.knofel@outlook.com?subject=Resposta%20Namoro&body=Ela%20respondeu:%20${opcao}`;
-    }
-  </script>
 </body>
 </html>
