@@ -1,91 +1,1099 @@
-import React, { useState, useEffect } from 'react';
-import './App.css'; // Importe seu CSS
 
-function App() {
-  const [timer, setTimer] = useState(0);
-  const [showTimerPage, setShowTimerPage] = useState(false);
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Nosso Começo</title>
+<style>
+  :root{
+    /* Paleta romântica (ajuste conforme desejar) */
+    --rose-50:#fff1f5;
+    --rose-100:#ffe4e9;
+    --rose-200:#fecdd3;
+    --rose-300:#fda4af;
+    --rose-400:#fb7185;
+    --rose-500:#f43f5e;
+    --rose-600:#e11d48;
+    --rose-700:#be123c;
+    --rose-800:#9f1239;
+    --rose-900:#881337;
 
-  useEffect(() => {
-    if (timer > 0) {
-      const interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [timer]);
+    --pink-400:#f472b6;
+    --pink-500:#ec4899;
+    --pink-600:#db2777;
 
-  const startTimer = () => {
-    setTimer(90 * 24 * 60 * 60); // 90 dias em segundos
-    setShowTimerPage(true);
-  };
+    --bg-grad-1: linear-gradient(180deg, #fff1f5 0%, #ffe4e9 60%, #fecdd3 100%);
+    --bg-grad-2: linear-gradient(180deg, #fde2e4 0%, #fbcfe8 60%, #fecdd3 100%);
 
-  const getMoonPhase = () => {
-    const date = new Date('2025-01-18');
-    // Lógica simples para determinar a fase da lua
-    return 'Cheia'; // Exemplo: substituir com cálculo real
-  };
+    --text:#471019;
+    --text-strong:#360b12;
+    --muted:#7a2a3b;
 
-  return (
-    <div>
-      <audio autoPlay loop src="/path/to/your/music.mp3" />
-      
-      {/* Seção 1 */}
-      <section className="section bg-heart">
-        <h1>Olá, meu amor!</h1>
-        <p>Esta é a nossa história.</p>
-        <button className="down-arrow" onClick={() => window.scrollTo(0, window.innerHeight)}>{"↓"}</button>
-      </section>
+    --card:#ffffffcc;
+    --shadow: 0 6px 24px rgba(0,0,0,0.12);
 
-      {/* Seção 2 */}
-      <section className="section bg-heart">
-        <h2>Memórias</h2>
-        <div className="carousel">
-          {/* Carrossel de imagens aqui */}
-        </div>
-        <button className="down-arrow" onClick={() => window.scrollTo(0, window.innerHeight)}>{"↓"}</button>
-      </section>
+    --section-padding: 2rem;
+    --radius: 16px;
+  }
 
-      {/* Seção 3 */}
-      <section className="section bg-stars">
-        <h2>O Sistema Solar</h2>
-        <div className="solar-animation">
-          {/* Animação do Sistema Solar aqui */}
-        </div>
-        <div className="timer">
-          <div>Meses: {Math.floor(timer / (30 * 24 * 60 * 60))}</div>
-          <div>Dias: {Math.floor((timer % (30 * 24 * 60 * 60)) / (24 * 60 * 60))}</div>
-          <div>Horas: {Math.floor((timer % (24 * 60 * 60)) / (60 * 60))}</div>
-          <div>Minutos: {Math.floor((timer % (60 * 60)) / 60)}</div>
-          <div>Segundos: {timer % 60}</div>
-        </div>
-        <button className="down-arrow" onClick={() => window.scrollTo(0, window.innerHeight)}>{"↓"}</button>
-      </section>
+  /* Reset e base */
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    color: var(--text);
+    background: var(--bg-grad-1);
+    overflow: hidden; /* o scroll fica no scroller */
+  }
 
-      {/* Seção 4 */}
-      <section className="section bg-heart">
-        <h2>Fase da Lua</h2>
-        <div className="moon-animation">
-          {/* Animação da lua aqui, usando getMoonPhase() */}
-        </div>
-        <button className="down-arrow" onClick={() => window.scrollTo(0, window.innerHeight)}>{"↓"}</button>
-      </section>
+  /* Container principal com scroll-snap */
+  .scroller{
+    position: relative;
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
 
-      {/* Seção 5 */}
-      <section className="section bg-heart">
-        <h2>Quer continuar essa história?</h2>
-        <button onClick={startTimer}>Sim</button>
-        <button onClick={() => alert("Obrigado! Redirecionando...")}>Não</button>
-      </section>
+  section.full{
+    position: relative;
+    min-height: 100dvh;
+    height: 100dvh;
+    scroll-snap-align: start;
+    display: grid;
+    place-items: center;
+    padding: var(--section-padding);
+    isolation: isolate; /* para z-index internos */
+  }
 
-      {showTimerPage && (
-        <div className="timer-page">
-          <h2>Contagem Regressiva</h2>
-          {/* Temporizador de 3 meses aqui */}
-          <p>Agradecemos por essa jornada!</p>
-        </div>
-      )}
+  .content{
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 720px;
+    width: 100%;
+  }
+
+  h1,h2,h3{margin:0 0 0.5rem 0; line-height:1.15}
+  h1{
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--text-strong);
+    letter-spacing: 0.2px;
+  }
+  p.lead{
+    font-size: clamp(1rem, 2.8vw, 1.125rem);
+    color: var(--muted);
+    margin: 0.5rem 0 1rem 0;
+  }
+
+  /* Botão flutuante de áudio */
+  .audio-button{
+    position: fixed;
+    top: env(safe-area-inset-top, 12px);
+    right: 12px;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: var(--shadow);
+    border: 2px solid var(--rose-300);
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .audio-button:active{ transform: scale(0.96) }
+  .audio-button svg{ width: 24px; height: 24px; }
+  .audio-playing{ border-color: var(--rose-500) }
+  .audio-paused{ border-color: var(--rose-300) }
+  .audio-pulse{
+    animation: pulse 1.2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(244,63,94,0.4) }
+    70%{ box-shadow: 0 0 0 10px rgba(244,63,94,0) }
+    100%{ box-shadow: 0 0 0 0 rgba(244,63,94,0) }
+  }
+
+  /* Corações overlay (global, fixo) */
+  .hearts-overlay{
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .heart{
+    position: absolute;
+    bottom: -40px;
+    width: 20px;
+    height: 18px;
+    transform: rotate(45deg);
+    opacity: 0.9;
+    animation: floatUp linear forwards;
+    will-change: transform, opacity;
+  }
+  .heart::before,
+  .heart::after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: inherit;
+  }
+  .heart::before{
+    top: -50%;
+    left: 0;
+  }
+  .heart::after{
+    left: -50%;
+    top: 0;
+  }
+  @keyframes floatUp{
+    from { transform: translateY(0) rotate(45deg) scale(1); opacity: 0.95; }
+    to   { transform: translateY(-120vh) rotate(45deg) scale(1.2); opacity: 0; }
+  }
+
+  /* Setas para próxima seção */
+  .next-arrow{
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    z-index: 3;
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    border: 2px solid var(--rose-300);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  .next-arrow svg{ width: 24px; height: 24px; }
+  .next-arrow:active{ transform: translateX(-50%) scale(0.96) }
+
+  /* Seção 1 - Herói */
+  .s1{
+    background: var(--bg-grad-2);
+  }
+  .hero-card{
+    background: var(--card);
+    border: 1px solid var(--rose-200);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    backdrop-filter: blur(4px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Seção 2 - Carrossel */
+  .s2{
+    background: var(--bg-grad-1);
+  }
+  .carousel{
+    position: relative;
+  }
+  .carousel-track{
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+  }
+  .carousel-track::-webkit-scrollbar{ display: none; }
+  .slide{
+    flex: 0 0 100%;
+    height: min(62vh, 64dvh);
+    border-radius: 14px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    border: 1px solid var(--rose-200);
+    background: #f8d7dc;
+    position: relative;
+  }
+  .slide img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .carousel-controls{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+  }
+  .carousel-btn{
+    pointer-events: auto;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    border: 2px solid var(--rose-300);
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    margin: 0 6px;
+  }
+  .carousel-btn:active{ transform: scale(0.96) }
+  .carousel-btn svg{ width: 22px; height: 22px; }
+
+  /* Seção 3 - Sistema Solar + contadores */
+  .s3{
+    background: radial-gradient(circle at 50% 20%, #ffe4e9 0%, #fecdd3 35%, #fda4af 100%);
+  }
+  .starfield{
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(2px 2px at 20% 30%, #ffffffcc 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 70% 60%, #ffffffc0 50%, transparent 51%),
+      radial-gradient(1.6px 1.6px at 40% 80%, #ffffff99 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 80% 25%, #ffffffb3 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 10% 75%, #ffffff80 50%, transparent 51%);
+    background-repeat: no-repeat;
+    animation: starsMove 24s linear infinite;
+    opacity: 0.7;
+  }
+  @keyframes starsMove{
+    0%{ background-position: 0 0, 0 0, 0 0, 0 0, 0 0 }
+    100%{ background-position: 0 -1200px, 0 -900px, 0 -1100px, 0 -1000px, 0 -800px }
+  }
+  .solar{
+    position: relative;
+    z-index: 2;
+    margin: 0 auto 1rem auto;
+    width: min(76vw, 380px);
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+  }
+  .sun{
+    width: 100px;
+    height: 100px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 35% 35%, #fff3, transparent 40%), radial-gradient(circle, #ffd166 0%, #ff9e00 60%, #f97316 100%);
+    box-shadow:
+      0 0 30px 12px rgba(255, 204, 0, 0.5),
+      inset 0 0 20px rgba(255,255,255,0.35);
+  }
+  .orbit{
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 85%;
+    height: 85%;
+    border-radius: 999px;
+    border: 1.5px dashed rgba(255,255,255,0.6);
+  }
+  .earth-wrapper{
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 85%;
+    height: 85%;
+    animation: orbit 12s linear infinite;
+    transform-origin: center center;
+  }
+  @keyframes orbit{
+    from{ transform: rotate(0deg) }
+    to{ transform: rotate(360deg) }
+  }
+  .earth{
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-12px, -12px);
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #9be7ff 0%, #22c1ee 60%, #1991c8 100%);
+    box-shadow: 0 0 10px rgba(34,193,238,0.6);
+  }
+
+  .counters{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 0.75rem;
+  }
+  .counter{
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--rose-200);
+    border-radius: 12px;
+    padding: 10px 6px;
+  }
+  .counter .value{
+    font-size: clamp(1.1rem, 5vw, 1.4rem);
+    font-weight: 700;
+    color: var(--rose-700);
+  }
+  .counter .label{
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* Seção 4 - Terra, Lua e fase da Lua */
+  .s4{
+    background: radial-gradient(circle at 50% 15%, #ffe4e9 0%, #fecdd3 50%, #fda4af 100%);
+  }
+  .earth-moon{
+    position: relative;
+    width: min(76vw, 360px);
+    aspect-ratio: 1/1;
+    margin: 0 auto 0.75rem auto;
+  }
+  .earth-center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+    background: radial-gradient(circle at 35% 35%, #b2f5ea 0%, #34d399 60%, #059669 100%);
+    box-shadow: 0 0 12px rgba(5,150,105,0.5);
+  }
+  .moon-orbit{
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 68%;
+    height: 68%;
+    border-radius: 999px;
+    border: 1px dashed rgba(255,255,255,0.6);
+  }
+  .moon-wrapper{
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 68%;
+    height: 68%;
+    animation: orbit 6.4s linear infinite;
+  }
+  .moon{
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    transform: translate(-8px, -8px);
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #f5f5f5 0%, #d4d4d4 70%, #a3a3a3 100%);
+    box-shadow: 0 0 6px rgba(255,255,255,0.6);
+  }
+
+  .phase-card{
+    background: var(--card);
+    border: 1px solid var(--rose-200);
+    border-radius: 14px;
+    padding: 0.75rem;
+    box-shadow: var(--shadow);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .phase-svg{
+    width: 84px;
+    height: 84px;
+  }
+  .phase-title{
+    font-weight: 700;
+    color: var(--text-strong);
+  }
+  .phase-sub{
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* Seção 5 - Pergunta Sim/Não */
+  .s5{
+    background: var(--bg-grad-1);
+  }
+  .cta-buttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 1rem;
+  }
+  .btn{
+    appearance: none;
+    border: 2px solid transparent;
+    background: var(--rose-500);
+    color: white;
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+  .btn.secondary{
+    background: white;
+    color: var(--rose-700);
+    border-color: var(--rose-300);
+  }
+  .btn:active{ transform: scale(0.97) }
+
+  /* Páginas internas (Sim / Não) */
+  .page{
+    position: fixed;
+    inset: 0;
+    display: none;
+    height: 100dvh;
+    width: 100%;
+    background: var(--bg-grad-2);
+    z-index: 4;
+    padding: var(--section-padding);
+    overflow: hidden;
+  }
+  .page .inner{
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .back-btn{
+    margin-top: 1rem;
+    background: white;
+    color: var(--rose-700);
+    border: 2px solid var(--rose-300);
+  }
+  .timer{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  .timer .tbox{
+    min-width: 70px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid var(--rose-200);
+    border-radius: 12px;
+    padding: 10px 8px;
+  }
+  .timer .num{
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--rose-700);
+  }
+  .timer .lbl{
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .loader{
+    width: 42px;
+    height: 42px;
+    border: 3px solid rgba(255,255,255,0.6);
+    border-top-color: var(--rose-600);
+    border-radius: 999px;
+    animation: spin 1s linear infinite;
+    margin: 0.75rem auto 0;
+  }
+  @keyframes spin{
+    from{ transform: rotate(0deg) }
+    to{ transform: rotate(360deg) }
+  }
+
+  /* Acessibilidade (focus) */
+  .audio-button:focus-visible,
+  .next-arrow:focus-visible,
+  .btn:focus-visible,
+  .carousel-btn:focus-visible,
+  .back-btn:focus-visible{
+    outline: 3px solid #ff8fa3;
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Música de fundo: altere o caminho em src se desejar -->
+<!-- Local do arquivo de música: audio/musica.mp3 -->
+<audio id="bgAudio" src="audio/musica.mp3" preload="auto" autoplay loop playsinline></audio>
+
+<!-- Botão flutuante de áudio -->
+<button id="audioToggle"
+  class="audio-button audio-paused"
+  aria-label="Alternar música (tocar/pausar)"
+  title="Tocar/Pausar">
+  <!-- Ícone padrão (play) -->
+  <svg id="iconPlay" viewBox="0 0 24 24" aria-hidden="true" fill="#e11d48">
+    <path d="M8 5v14l11-7z"></path>
+  </svg>
+  <svg id="iconPause" viewBox="0 0 24 24" aria-hidden="true" fill="#e11d48" style="display:none">
+    <path d="M6 5h4v14H6zM14 5h4v14h-4z"></path>
+  </svg>
+</button>
+
+<!-- Overlay global de corações (fixo) -->
+<div id="heartsOverlay" class="hearts-overlay" aria-hidden="true"></div>
+
+<!-- Scroller principal -->
+<main id="scroller" class="scroller" role="main" aria-label="Conteúdo principal">
+
+  <!-- Seção 1 - Herói -->
+  <section id="sec1" class="full s1" aria-label="Introdução">
+    <div class="content hero-card">
+      <!-- Texto ajustável -->
+      <!-- Título e descrição podem ser alterados conforme desejar -->
+      <h1>Nosso começo</h1>
+      <p class="lead">
+        Cada batida do coração é um passo nessa dança. Hoje, escrevemos juntos as primeiras linhas de uma história que promete ser linda.
+      </p>
     </div>
-  );
-}
+    <button class="next-arrow" aria-label="Ir para a próxima seção" data-next="#sec2" role="button" title="Próximo">
+      <svg viewBox="0 0 24 24" fill="#e11d48" aria-hidden="true"><path d="M12 16.5l-7-7 1.4-1.4L12 13.7l5.6-5.6L19 9.5z"/></svg>
+    </button>
+  </section>
 
-export default App;
+  <!-- Seção 2 - Carrossel -->
+  <section id="sec2" class="full s2" aria-label="Carrossel de Fotos">
+    <div class="content">
+      <h2>Nosso álbum</h2>
+      <p class="lead">Deslize para ver nossas lembranças. Você pode substituir as fotos na pasta fotos/.</p>
+
+      <div class="carousel" aria-roledescription="carrossel">
+        <div id="carouselTrack" class="carousel-track" tabindex="0" aria-label="Galeria de fotos com rolagem horizontal">
+          <!-- Substitua os caminhos das imagens abaixo pela pasta fotos/ -->
+          <!-- Fotos do carrossel: fotos/1.jpg ... fotos/5.jpg -->
+          <div class="slide"><img src="fotos/1.jpg" alt="Foto 1 do nosso álbum"></div>
+          <div class="slide"><img src="fotos/2.jpg" alt="Foto 2 do nosso álbum"></div>
+          <div class="slide"><img src="fotos/3.jpg" alt="Foto 3 do nosso álbum"></div>
+          <div class="slide"><img src="fotos/4.jpg" alt="Foto 4 do nosso álbum"></div>
+          <div class="slide"><img src="fotos/5.jpg" alt="Foto 5 do nosso álbum"></div>
+        </div>
+        <div class="carousel-controls" aria-hidden="false">
+          <button class="carousel-btn" id="prevBtn" aria-label="Anterior" role="button" title="Anterior">
+            <svg viewBox="0 0 24 24" fill="#e11d48"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          </button>
+          <button class="carousel-btn" id="nextBtn" aria-label="Próximo" role="button" title="Próximo">
+            <svg viewBox="0 0 24 24" fill="#e11d48"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="next-arrow" aria-label="Ir para a próxima seção" data-next="#sec3" role="button" title="Próximo">
+      <svg viewBox="0 0 24 24" fill="#e11d48" aria-hidden="true"><path d="M12 16.5l-7-7 1.4-1.4L12 13.7l5.6-5.6L19 9.5z"/></svg>
+    </button>
+  </section>
+
+  <!-- Seção 3 - Sistema Solar + contadores -->
+  <section id="sec3" class="full s3" aria-label="Sistema Solar e Contadores">
+    <div class="starfield" aria-hidden="true"></div>
+    <div class="content">
+      <h2>Desde que nos encontramos</h2>
+      <p class="lead">Enquanto a Terra dança ao redor do Sol, contamos os instantes desta constelação a dois.</p>
+
+      <div class="solar" aria-hidden="false">
+        <div class="sun" aria-label="Sol"></div>
+        <div class="orbit" aria-hidden="true"></div>
+        <div class="earth-wrapper">
+          <div class="earth" aria-label="Terra"></div>
+        </div>
+      </div>
+
+      <div class="counters" aria-label="Contadores de tempo desde 18/01/2025">
+        <div class="counter">
+          <div id="monthsVal" class="value">0</div>
+          <div class="label">Meses</div>
+        </div>
+        <div class="counter">
+          <div id="daysVal" class="value">0</div>
+          <div class="label">Dias</div>
+        </div>
+        <div class="counter">
+          <div id="hoursVal" class="value">0</div>
+          <div class="label">Horas</div>
+        </div>
+        <div class="counter">
+          <div id="minsVal" class="value">0</div>
+          <div class="label">Minutos</div>
+        </div>
+        <div class="counter">
+          <div id="secsVal" class="value">0</div>
+          <div class="label">Segundos</div>
+        </div>
+      </div>
+    </div>
+    <button class="next-arrow" aria-label="Ir para a próxima seção" data-next="#sec4" role="button" title="Próximo">
+      <svg viewBox="0 0 24 24" fill="#e11d48" aria-hidden="true"><path d="M12 16.5l-7-7 1.4-1.4L12 13.7l5.6-5.6L19 9.5z"/></svg>
+    </button>
+  </section>
+
+  <!-- Seção 4 - Terra e Lua + fase da Lua -->
+  <section id="sec4" class="full s4" aria-label="Terra e Lua">
+    <div class="content">
+      <h2>Ao redor de nós</h2>
+      <p class="lead">A Lua nos observa, mudando de fase como os capítulos de uma história que cresce.</p>
+
+      <div class="earth-moon" aria-hidden="false">
+        <div class="earth-center" aria-label="Terra"></div>
+        <div class="moon-orbit" aria-hidden="true"></div>
+        <div class="moon-wrapper">
+          <div class="moon" aria-label="Lua"></div>
+        </div>
+      </div>
+
+      <div class="phase-card" role="group" aria-label="Fase da Lua em 18/01/2025">
+        <svg id="moonPhaseSvg" class="phase-svg" viewBox="0 0 100 100" aria-hidden="true">
+          <!-- Disco da Lua com máscara aplicada via JS -->
+          <defs>
+            <mask id="phaseMask">
+              <!-- Será atualizado via JS: retângulo branco para fração iluminada à direita -->
+              <rect x="0" y="0" width="100" height="100" fill="black"></rect>
+              <circle cx="50" cy="50" r="50" fill="white"></circle>
+              <rect id="phaseRect" x="100" y="0" width="0" height="100" fill="white"></rect>
+            </mask>
+          </defs>
+          <circle cx="50" cy="50" r="50" fill="#d4d4d4"></circle>
+          <circle cx="50" cy="50" r="50" fill="#f5f5f5" mask="url(#phaseMask)"></circle>
+        </svg>
+        <div>
+          <div id="phaseTitle" class="phase-title">Fase da Lua em 18/01/2025: —</div>
+          <div class="phase-sub">Visualização aproximada (a luz vem da direita).</div>
+        </div>
+      </div>
+    </div>
+    <button class="next-arrow" aria-label="Ir para a próxima seção" data-next="#sec5" role="button" title="Próximo">
+      <svg viewBox="0 0 24 24" fill="#e11d48" aria-hidden="true"><path d="M12 16.5l-7-7 1.4-1.4L12 13.7l5.6-5.6L19 9.5z"/></svg>
+    </button>
+  </section>
+
+  <!-- Seção 5 - Pergunta -->
+  <section id="sec5" class="full s5" aria-label="Pergunta final">
+    <div class="content hero-card">
+      <h2>Você quer continuar essa história?</h2>
+      <p class="lead">Diz que sim e vamos escrever os próximos capítulos, um abraço por vez.</p>
+      <div class="cta-buttons">
+        <button id="btnSim" class="btn" role="button" aria-label="Sim">Sim</button>
+        <button id="btnNao" class="btn secondary" role="button" aria-label="Não">Não</button>
+      </div>
+    </div>
+    <!-- Sem seta aqui (última seção) -->
+  </section>
+
+</main>
+
+<!-- Página interna: SIM -->
+<section id="pagina-sim" class="page" aria-label="Página Sim">
+  <div class="inner">
+    <div class="hero-card" style="max-width: 760px;">
+      <h2>Obrigado por dizer sim!</h2>
+      <p class="lead">Começa agora uma contagem carinhosa para nosso próximo marco em 3 meses.</p>
+
+      <div id="simTimer" class="timer" aria-label="Temporizador de 3 meses">
+        <div class="tbox">
+          <div id="simDays" class="num">0</div>
+          <div class="lbl">Dias</div>
+        </div>
+        <div class="tbox">
+          <div id="simHours" class="num">0</div>
+          <div class="lbl">Horas</div>
+        </div>
+        <div class="tbox">
+          <div id="simMins" class="num">0</div>
+          <div class="lbl">Minutos</div>
+        </div>
+        <div class="tbox">
+          <div id="simSecs" class="num">0</div>
+          <div class="lbl">Segundos</div>
+        </div>
+      </div>
+
+      <button class="btn back-btn" id="backFromSim" aria-label="Voltar ao início" role="button">Voltar ao início</button>
+    </div>
+  </div>
+</section>
+
+<!-- Página interna: NÃO -->
+<section id="pagina-nao" class="page" aria-label="Página Não">
+  <div class="inner">
+    <div class="hero-card" style="max-width: 760px;">
+      <h2>Obrigado por estar aqui</h2>
+      <p class="lead">Agradeço por cada segundo de atenção. Fique à vontade para seguir do seu jeitinho.</p>
+
+      <div class="loader" aria-hidden="true"></div>
+      <p id="naoMsg" class="lead" style="margin-top: 0.5rem;">Preparando sugestões... 10s</p>
+
+      <div id="redirectArea" style="display:none; margin-top: 0.75rem;">
+        <p class="lead" style="margin:0.25rem 0;">Se quiser, você pode visitar um outro lugar:</p>
+        <!-- O href será definido via JS se REDIRECT_URL estiver configurado -->
+        <a id="redirectBtn" class="btn" role="button" aria-label="Ir para o site" href="#" target="_blank" rel="noopener">Ir para o site</a>
+      </div>
+
+      <button class="btn back-btn" id="backFromNao" aria-label="Voltar ao início" role="button">Voltar ao início</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  // =========================
+  // Configurações (personalize)
+  // =========================
+  // Caminho da música: ajuste o src no <audio> conforme necessário (audio/musica.mp3).
+  // Fotos do carrossel: substitua em fotos/1.jpg ... fotos/5.jpg.
+  // URL de redirecionamento (página "Não"): se vazio, o botão não será exibido.
+  const REDIRECT_URL = ""; // exemplo: "https://exemplo.com"
+
+  // Data inicial para contadores (Seção 3)
+  const START_DATE = new Date("2025-01-18T00:00:00"); // horário local
+
+  // Epoca nova-lua (aproximação) e duração do mês sinódico
+  const LUNAR_EPOCH = Date.parse("2000-01-06T18:14:00Z"); // ms
+  const SYNODIC_MONTH = 29.530588853; // dias
+
+  // =========================
+  // Utilidades
+  // =========================
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+  function smoothScrollTo(targetSel){
+    const el = typeof targetSel === "string" ? document.querySelector(targetSel) : targetSel;
+    if(!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // =========================
+  // Áudio (autoplay + toggle)
+  // =========================
+  const audio = document.getElementById("bgAudio");
+  const audioBtn = document.getElementById("audioToggle");
+  const iconPlay = document.getElementById("iconPlay");
+  const iconPause = document.getElementById("iconPause");
+
+  function setAudioButtonState(isPlaying, pulse=false){
+    if(isPlaying){
+      audioBtn.classList.remove("audio-paused");
+      audioBtn.classList.add("audio-playing");
+      iconPlay.style.display = "none";
+      iconPause.style.display = "block";
+    }else{
+      audioBtn.classList.remove("audio-playing");
+      audioBtn.classList.add("audio-paused");
+      iconPause.style.display = "none";
+      iconPlay.style.display = "block";
+    }
+    if(pulse){
+      audioBtn.classList.add("audio-pulse");
+    }else{
+      audioBtn.classList.remove("audio-pulse");
+    }
+  }
+
+  async function tryAutoplay(){
+    try{
+      await audio.play();
+      setAudioButtonState(true, false);
+    }catch(e){
+      // Autoplay bloqueado: mostra estado de "toque para iniciar"
+      setAudioButtonState(false, true);
+    }
+  }
+
+  audioBtn.addEventListener("click", async () => {
+    if(audio.paused){
+      try{
+        await audio.play();
+        setAudioButtonState(true, false);
+      }catch(e){
+        // ainda bloqueado?
+        setAudioButtonState(false, true);
+      }
+    }else{
+      audio.pause();
+      setAudioButtonState(false, false);
+    }
+  });
+
+  // =========================
+  // Setas para próxima seção
+  // =========================
+  function wireArrows(){
+    $$(".next-arrow").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const next = btn.getAttribute("data-next");
+        smoothScrollTo(next);
+      });
+    });
+  }
+
+  // =========================
+  // Carrossel (Seção 2)
+  // =========================
+  function wireCarousel(){
+    const track = document.getElementById("carouselTrack");
+    const prev = document.getElementById("prevBtn");
+    const next = document.getElementById("nextBtn");
+    function scrollByViewport(dir){
+      const amount = track.clientWidth;
+      track.scrollBy({ left: dir * amount, behavior: "smooth" });
+    }
+    prev.addEventListener("click", () => scrollByViewport(-1));
+    next.addEventListener("click", () => scrollByViewport(1));
+  }
+
+  // =========================
+  // Contadores (Seção 3)
+  // =========================
+  function diffInMonthsParts(start, now){
+    // Meses de calendário transcorridos
+    let months = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+    // Ajuste se ainda não atingiu o dia do mês
+    if(now.getDate() < start.getDate()){
+      months -= 1;
+    }
+    // Ponto de ancoragem para calcular o restante (dias/horas...)
+    const anchor = new Date(start);
+    anchor.setMonth(start.getMonth() + months);
+    return { months, anchor };
+  }
+
+  function updateElapsedCounters(){
+    const now = new Date();
+    const { months, anchor } = diffInMonthsParts(START_DATE, now);
+    let deltaMs = now - anchor;
+    if(deltaMs < 0){ // caso START_DATE esteja no futuro
+      deltaMs = 0;
+    }
+    const d = Math.floor(deltaMs / 86400000);
+    deltaMs -= d * 86400000;
+    const h = Math.floor(deltaMs / 3600000);
+    deltaMs -= h * 3600000;
+    const m = Math.floor(deltaMs / 60000);
+    deltaMs -= m * 60000;
+    const s = Math.floor(deltaMs / 1000);
+
+    $("#monthsVal").textContent = months;
+    $("#daysVal").textContent = d;
+    $("#hoursVal").textContent = h;
+    $("#minsVal").textContent = m;
+    $("#secsVal").textContent = s;
+  }
+
+  let countersIntervalId = null;
+  function startCounters(){
+    updateElapsedCounters();
+    countersIntervalId = setInterval(updateElapsedCounters, 1000);
+  }
+
+  // =========================
+  // Fase da Lua (Seção 4)
+  // =========================
+  function moonPhaseInfoFor(dateUTC){
+    // dateUTC: objeto Date interpretado como UTC
+    const ms = Date.parse(dateUTC.toISOString());
+    const daysSinceEpoch = (ms - LUNAR_EPOCH) / 86400000; // dias
+    let age = daysSinceEpoch % SYNODIC_MONTH;
+    if(age < 0) age += SYNODIC_MONTH;
+    const phaseNorm = age / SYNODIC_MONTH; // 0..1
+    const illumFrac = 0.5 * (1 - Math.cos(2 * Math.PI * phaseNorm)); // 0..1
+    // Classificação textual aproximada
+    const d = age;
+    let label = "—";
+    if (d < 1.0) label = "Nova";
+    else if (d < 7.38) label = "Crescente Iluminante";
+    else if (Math.abs(d - 7.38) < 0.8) label = "Quarto Crescente";
+    else if (d < 14.77) label = "Gibosa Crescente";
+    else if (Math.abs(d - 14.77) < 0.8) label = "Cheia";
+    else if (d < 22.15) label = "Gibosa Minguante";
+    else if (Math.abs(d - 22.15) < 0.8) label = "Quarto Minguante";
+    else label = "Minguante";
+
+    return { age, phaseNorm, illumFrac, label };
+  }
+
+  function renderMoonPhase(){
+    // Data fixa solicitada
+    const dateFixed = new Date("2025-01-18T00:00:00Z"); // UTC
+    const info = moonPhaseInfoFor(dateFixed);
+    // Atualiza título
+    const title = document.getElementById("phaseTitle");
+    title.textContent = "Fase da Lua em 18/01/2025: " + info.label;
+
+    // Atualiza máscara (iluminação pela direita).
+    // Usaremos um retângulo branco que revela uma fração da direita para a esquerda.
+    const w = Math.max(0, Math.min(1, info.illumFrac)) * 100; // 0..100
+    const rect = document.getElementById("phaseRect");
+    rect.setAttribute("width", w.toFixed(2));
+    rect.setAttribute("x", (100 - w).toFixed(2));
+  }
+
+  // =========================
+  // Páginas internas (Sim/Não)
+  // =========================
+  const pageSim = document.getElementById("pagina-sim");
+  const pageNao = document.getElementById("pagina-nao");
+  const scroller = document.getElementById("scroller");
+
+  // SIM: temporizador de 3 meses a partir do clique
+  let simIntervalId = null;
+  function startSimCountdown(){
+    if(simIntervalId) { clearInterval(simIntervalId); simIntervalId = null; }
+    const target = new Date();
+    target.setMonth(target.getMonth() + 3);
+
+    function tick(){
+      const now = new Date();
+      let diff = target - now;
+      if(diff < 0) diff = 0;
+      const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+      const h = Math.floor(diff / 3600000); diff -= h * 3600000;
+      const m = Math.floor(diff / 60000); diff -= m * 60000;
+      const s = Math.floor(diff / 1000);
+      $("#simDays").textContent = d;
+      $("#simHours").textContent = h;
+      $("#simMins").textContent = m;
+      $("#simSecs").textContent = s;
+    }
+    tick();
+    simIntervalId = setInterval(tick, 1000);
+  }
+
+  function showPage(id){
+    // Oculta ambas
+    pageSim.style.display = "none";
+    pageNao.style.display = "none";
+    // Mostra a selecionada
+    const target = (id === "sim") ? pageSim : pageNao;
+    target.style.display = "block";
+    // rola para topo do scroller (quando voltar)
+    // e evita rolagem atrás
+    scroller.style.pointerEvents = "none";
+    scroller.style.filter = "blur(1px)";
+  }
+
+  function backToMain(){
+    // Oculta páginas internas
+    pageSim.style.display = "none";
+    pageNao.style.display = "none";
+    // Restaura interação
+    scroller.style.pointerEvents = "auto";
+    scroller.style.filter = "none";
+    // Volta ao início
+    smoothScrollTo("#sec1");
+  }
+
+  // NÃO: exibe botão após 10s se REDIRECT_URL estiver definido
+  let naoTimeoutId = null;
+  function startNaoFlow(){
+    const msg = document.getElementById("naoMsg");
+    const area = document.getElementById("redirectArea");
+    const btn = document.getElementById("redirectBtn");
+    area.style.display = "none";
+    let seconds = 10;
+    msg.textContent = "Preparando sugestões... " + seconds + "s";
+    if(naoTimeoutId){ clearInterval(naoTimeoutId); naoTimeoutId = null; }
+    naoTimeoutId = setInterval(() => {
+      seconds -= 1;
+      msg.textContent = "Preparando sugestões... " + seconds + "s";
+      if(seconds <= 0){
+        clearInterval(naoTimeoutId);
+        naoTimeoutId = null;
+        if(REDIRECT_URL && typeof REDIRECT_URL === "string" && REDIRECT_URL.trim() !== ""){
+          btn.setAttribute("href", REDIRECT_URL);
+          area.style.display = "block";
+        }else{
+          msg.textContent = "Tudo pronto por aqui. Quando quiser, é só voltar ao início.";
+        }
+      }
+    }, 1000);
+  }
+
+  // =========================
+  // Corações (geração contínua)
+  // =========================
+  const heartsOverlay = document.getElementById("heartsOverlay");
+  function randomBetween(min, max){ return Math.random() * (max - min) + min; }
+  function spawnHeart(){
+    const h = document.createElement("span");
+    h.className = "heart";
+    const size = randomBetween(10, 22); // px
+    const dur = randomBetween(6, 12); // s
+    const left = randomBetween(2, 98); // %
+    // paleta aleatória (tons de rosa/vermelho)
+    const colors = [ "#fda4af", "#fb7185", "#f43f5e", "#ec4899", "#e11d48" ];
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    h.style.width = size + "px";
+    h.style.height = (size * 0.9) + "px";
+    h.style.left = left + "vw";
+    h.style.background = c;
+    h.style.animationDuration = dur + "s";
+    h.style.opacity = String(randomBetween(0.6, 0.95));
+    heartsOverlay.appendChild(h);
+    h.addEventListener("animationend", () => h.remove());
+  }
+  let heartsIntervalId = null;
+  function startHearts(){
+    if(heartsIntervalId) return;
+    // taxa moderada para boa performance
+    heartsIntervalId = setInterval(() => {
+      // gerar 1-2 corações por "tick"
+      const count = Math.random() < 0.4 ? 2 : 1;
+      for(let i=0;i<count;i++) spawnHeart();
+    }, 700);
+  }
+
+  // =========================
+  // Inicialização
+  // =========================
+  document.addEventListener("DOMContentLoaded", () => {
+    tryAutoplay();
+    wireArrows();
+    wireCarousel();
+    startCounters();
+    renderMoonPhase();
+    startHearts();
+
+    // Botões Sim/Não
+    document.getElementById("btnSim").addEventListener("click", () => {
+      showPage("sim");
+      startSimCountdown();
+    });
+    document.getElementById("btnNao").addEventListener("click", () => {
+      showPage("nao");
+      startNaoFlow();
+    });
+
+    // Voltar
+    document.getElementById("backFromSim").addEventListener("click", () => {
+      if(simIntervalId){ clearInterval(simIntervalId); simIntervalId = null; }
+      backToMain();
+    });
+    document.getElementById("backFromNao").addEventListener("click", () => {
+      if(naoTimeoutId){ clearInterval(naoTimeoutId); naoTimeoutId = null; }
+      backToMain();
+    });
+  });
+
+  // Segurança ao sair
+  window.addEventListener("beforeunload", () => {
+    if(countersIntervalId) clearInterval(countersIntervalId);
+    if(simIntervalId) clearInterval(simIntervalId);
+    if(naoTimeoutId) clearInterval(naoTimeoutId);
+    if(heartsIntervalId) clearInterval(heartsIntervalId);
+  });
+</script>
+</body>
+</html>
+
