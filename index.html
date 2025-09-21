@@ -41,6 +41,7 @@ button.no{background:transparent;border:1px solid rgba(255,255,255,0.1);color:va
 .time-item{width:60px;height:60px;border-radius:8px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .time-item .num{font-size:1em;font-weight:700;}
 .time-item .lbl{font-size:0.7em;}
+#playMusic{position:fixed;right:20px;bottom:20px;background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:12px;cursor:pointer;font-weight:700;}
 @media(max-width:600px){.hero-content h1{font-size:1.8em;}.hero-content p{font-size:1em;}.card{min-width:150px;height:200px;}.sq{width:60px;height:60px;}.time-item{width:50px;height:50px;}}
 </style>
 </head>
@@ -120,6 +121,7 @@ button.no{background:transparent;border:1px solid rgba(255,255,255,0.1);color:va
 
 <!-- Player do YouTube -->
 <div id="player"></div>
+<div id="playMusic">▶️ Aperte para tocar a música</div>
 
 <script>
 // Navegação entre telas
@@ -160,17 +162,23 @@ function updateSince(){
 }
 setInterval(updateSince,1000); updateSince();
 
-// YouTube autoplay fundo
+// YouTube player
 let player;
 function onYouTubeIframeAPIReady(){
   player = new YT.Player('player',{
     videoId:'XdglM81b4g8',
     height:'0', width:'0',
-    playerVars:{autoplay:1,loop:1,playlist:'XdglM81b4g8',mute:0}
+    playerVars:{autoplay:0,loop:1,playlist:'XdglM81b4g8'}
   });
 }
 let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api"; document.body.appendChild(tag);
+
+// Botão de tocar música
+document.getElementById('playMusic').addEventListener('click',()=>{
+  if(player && player.playVideo) player.playVideo();
+  document.getElementById('playMusic').style.display='none';
+});
 
 // Botões Sim / Não
 const startBtn = document.getElementById('startTimer');
@@ -195,21 +203,23 @@ thanksNo.addEventListener('mouseenter',()=>{
   thanksNo.style.top = Math.random()*(parentRect.height-30)+'px';
 });
 
-// Temporizador
+// Temporizador de 3 meses
 let timerInterval;
 function initTimer(){
   const start = new Date(parseInt(localStorage.getItem('proposalStart')));
+  const end = new Date(start.getFullYear(), start.getMonth()+3, start.getDate(), start.getHours(), start.getMinutes(), start.getSeconds());
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = setInterval(()=>{
     const now = new Date();
-    let totalSec = Math.floor((now - start)/1000);
-    const months = Math.floor(totalSec/(30*24*3600));
-    const days = Math.floor(totalSec/86400);
-    totalSec%=86400;
-    const hours = Math.floor(totalSec/3600);
-    totalSec%=3600;
-    const minutes = Math.floor(totalSec/60);
-    const seconds = totalSec%60;
+    let diff = Math.floor((end - now)/1000);
+    if(diff<0) diff=0;
+    const months = Math.floor(diff/(30*24*3600));
+    const days = Math.floor(diff/86400);
+    diff%=86400;
+    const hours = Math.floor(diff/3600);
+    diff%=3600;
+    const minutes = Math.floor(diff/60);
+    const seconds = diff%60;
     document.getElementById('t_months').textContent=months;
     document.getElementById('t_days').textContent=days;
     document.getElementById('t_hours').textContent=String(hours).padStart(2,'0');
