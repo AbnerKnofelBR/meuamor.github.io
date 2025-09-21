@@ -27,7 +27,8 @@ section{height:100vh;scroll-snap-align:start;display:flex;align-items:center;jus
 .squares{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px;}
 .sq{width:80px;height:80px;border-radius:10px;background:rgba(255,255,255,0.05);display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .sq .val{font-size:1.2em;font-weight:700;}
-.sq .label{font-size:0.8em;}
+.sq .label{font-size:0.7em;}
+#solar-system{width:100%;height:300px;margin-top:20px;}
 .prompt-card{background:rgba(255,255,255,0.05);padding:20px;border-radius:12px;text-align:center;margin-top:20px;}
 .btns{display:flex;gap:15px;justify-content:center;margin-top:15px;}
 button.btn{padding:10px 20px;border-radius:10px;border:0;cursor:pointer;font-weight:700;}
@@ -46,76 +47,78 @@ button.no{background:transparent;border:1px solid rgba(255,255,255,0.1);color:va
 </style>
 </head>
 <body>
+
 <div class="wrap">
-
-<!-- Tela 1 -->
-<section id="hero">
-  <div class="hearts" id="hearts"></div>
-  <div class="hero-content">
-    <h1>Seremos parceiros nessa aventura?</h1>
-    <p>Desde o primeiro olhar, cada momento importa. Deslize para baixo e veja nossas lembranças.</p>
-  </div>
-  <div class="next-btn" data-target="gallery">⬇️</div>
-</section>
-
-<!-- Tela 2 -->
-<section id="gallery">
-  <div style="width:100%;text-align:center">
-    <h2>Algumas lembranças</h2>
-    <div class="carousel">
-      <div class="card"><img src="https://picsum.photos/300/400?random=1"></div>
-      <div class="card"><img src="https://picsum.photos/300/400?random=2"></div>
-      <div class="card"><img src="https://picsum.photos/300/400?random=3"></div>
-      <div class="card"><img src="https://picsum.photos/300/400?random=4"></div>
+  <!-- Tela 1 -->
+  <section id="hero">
+    <div class="hearts" id="hearts"></div>
+    <div class="hero-content">
+      <h1>Seremos parceiros nessa aventura?</h1>
+      <p>Desde o primeiro olhar, cada momento importa. Deslize para baixo e veja nossas lembranças.</p>
     </div>
-  </div>
-  <div class="next-btn" data-target="counter">⬇️</div>
-</section>
+    <div class="next-btn" data-target="gallery">⬇️</div>
+  </section>
 
-<!-- Tela 3 -->
-<section id="counter">
-  <div class="counter-inner">
-    <h2>Tempo desde que nos conhecemos</h2>
-    <div class="squares">
-      <div class="sq"><div class="val" id="years">0</div><div class="label">Anos</div></div>
-      <div class="sq"><div class="val" id="months">0</div><div class="label">Meses</div></div>
-      <div class="sq"><div class="val" id="days">0</div><div class="label">Dias</div></div>
-      <div class="sq"><div class="val" id="hours">00</div><div class="label">Horas</div></div>
-      <div class="sq"><div class="val" id="minutes">00</div><div class="label">Minutos</div></div>
-    </div>
-
-    <div class="prompt-card">
-      <h3>Deseja iniciar o temporizador do pedido de namoro?</h3>
-      <div class="btns">
-        <button class="btn yes" id="startTimer">Sim</button>
-        <button class="btn no" id="noBtn">Não</button>
+  <!-- Tela 2 -->
+  <section id="gallery">
+    <div style="width:100%;text-align:center">
+      <h2>Algumas lembranças</h2>
+      <div class="carousel">
+        <div class="card"><img src="https://picsum.photos/300/400?random=1"></div>
+        <div class="card"><img src="https://picsum.photos/300/400?random=2"></div>
+        <div class="card"><img src="https://picsum.photos/300/400?random=3"></div>
+        <div class="card"><img src="https://picsum.photos/300/400?random=4"></div>
       </div>
     </div>
-  </div>
-</section>
+    <div class="next-btn" data-target="counter">⬇️</div>
+  </section>
 
-<!-- Tela de agradecimento -->
-<section id="thanks">
-  <h2>Obrigado por tudo 💛</h2>
-  <div style="position:relative;height:120px;">
-    <button class="btn yes" id="thanksYes" style="position:absolute;left:20%;top:30%;">Sim</button>
-    <button class="btn no moveable" id="thanksNo" style="position:absolute;left:60%;top:30%;">Não</button>
-  </div>
-</section>
+  <!-- Tela 3 -->
+  <section id="counter">
+    <div class="counter-inner">
+      <h2>Tempo desde que nos conhecemos</h2>
+      <div class="squares">
+        <div class="sq"><div class="val" id="months">0</div><div class="label">Meses</div></div>
+        <div class="sq"><div class="val" id="days">0</div><div class="label">Dias</div></div>
+        <div class="sq"><div class="val" id="hours">00</div><div class="label">Horas</div></div>
+        <div class="sq"><div class="val" id="minutes">00</div><div class="label">Minutos</div></div>
+        <div class="sq"><div class="val" id="seconds">00</div><div class="label">Segundos</div></div>
+      </div>
 
-<!-- Tela do temporizador -->
-<section id="timer">
-  <div class="timer-box">
-    <h2>Cronômetro do Pedido</h2>
-    <div class="time-row">
-      <div class="time-item"><div class="num" id="t_months">0</div><div class="lbl">Meses</div></div>
-      <div class="time-item"><div class="num" id="t_days">0</div><div class="lbl">Dias</div></div>
-      <div class="time-item"><div class="num" id="t_hours">00</div><div class="lbl">Horas</div></div>
-      <div class="time-item"><div class="num" id="t_minutes">00</div><div class="lbl">Minutos</div></div>
-      <div class="time-item"><div class="num" id="t_seconds">00</div><div class="lbl">Segundos</div></div>
+      <canvas id="solar-system"></canvas>
+
+      <div class="prompt-card">
+        <h3>Deseja iniciar o temporizador do pedido de namoro?</h3>
+        <div class="btns">
+          <button class="btn yes" id="startTimer">Sim</button>
+          <button class="btn no" id="noBtn">Não</button>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- Tela de agradecimento -->
+  <section id="thanks">
+    <h2>Obrigado por tudo 💛</h2>
+    <div style="position:relative;height:120px;">
+      <button class="btn yes" id="thanksYes" style="position:absolute;left:20%;top:30%;">Sim</button>
+      <button class="btn no moveable" id="thanksNo" style="position:absolute;left:60%;top:30%;">Não</button>
+    </div>
+  </section>
+
+  <!-- Tela do temporizador -->
+  <section id="timer">
+    <div class="timer-box">
+      <h2>Cronômetro do Pedido</h2>
+      <div class="time-row">
+        <div class="time-item"><div class="num" id="t_months">0</div><div class="lbl">Meses</div></div>
+        <div class="time-item"><div class="num" id="t_days">0</div><div class="lbl">Dias</div></div>
+        <div class="time-item"><div class="num" id="t_hours">00</div><div class="lbl">Horas</div></div>
+        <div class="time-item"><div class="num" id="t_minutes">00</div><div class="lbl">Minutos</div></div>
+        <div class="time-item"><div class="num" id="t_seconds">00</div><div class="lbl">Segundos</div></div>
+      </div>
+    </div>
+  </section>
 
 </div>
 
@@ -124,14 +127,14 @@ button.no{background:transparent;border:1px solid rgba(255,255,255,0.1);color:va
 <div id="playMusic">▶️ Aperte para tocar a música</div>
 
 <script>
-// Navegação entre telas
+// --- Navegação ---
 document.querySelectorAll('.next-btn').forEach(btn=>{
   btn.addEventListener('click',()=> {
     document.getElementById(btn.dataset.target).scrollIntoView({behavior:'smooth'});
   });
 });
 
-// Corações animados
+// --- Corações ---
 const heartsEl = document.getElementById('hearts');
 function makeHeart(){
   const h = document.createElement('div'); h.className='heart';
@@ -146,88 +149,38 @@ function makeHeart(){
 }
 setInterval(makeHeart,500);
 
-// Contador desde 18/01/2025
+// --- Contador desde 18/01/2025 ---
 const sinceDate = new Date(2025,0,18);
 function updateSince(){
   const now = new Date();
-  let diff = now - sinceDate;
-  let d = Math.floor(diff/86400000);
-  let m = Math.floor(d/30); let y = Math.floor(m/12);
-  let h = now.getHours(), min=now.getMinutes();
-  document.getElementById('years').textContent=y;
-  document.getElementById('months').textContent=m%12;
-  document.getElementById('days').textContent=d%30;
-  document.getElementById('hours').textContent=String(h).padStart(2,'0');
-  document.getElementById('minutes').textContent=String(min).padStart(2,'0');
+  let diff = Math.floor((now - sinceDate)/1000);
+  let months=Math.floor(diff/(30*24*3600));
+  let days=Math.floor(diff/86400)%30;
+  let hours=Math.floor((diff%86400)/3600);
+  let minutes=Math.floor((diff%3600)/60);
+  let seconds=diff%60;
+  document.getElementById('months').textContent=months;
+  document.getElementById('days').textContent=days;
+  document.getElementById('hours').textContent=String(hours).padStart(2,'0');
+  document.getElementById('minutes').textContent=String(minutes).padStart(2,'0');
+  document.getElementById('seconds').textContent=String(seconds).padStart(2,'0');
 }
-setInterval(updateSince,1000); updateSince();
+setInterval(updateSince,1000);
+updateSince();
 
-// YouTube player
+// --- YouTube Player ---
 let player;
 function onYouTubeIframeAPIReady(){
-  player = new YT.Player('player',{
-    videoId:'XdglM81b4g8',
-    height:'0', width:'0',
-    playerVars:{autoplay:0,loop:1,playlist:'XdglM81b4g8'}
-  });
+  player = new YT.Player('player',{videoId:'XdglM81b4g8',height:'0',width:'0',playerVars:{autoplay:1,loop:1,playlist:'XdglM81b4g8'}});
 }
-let tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api"; document.body.appendChild(tag);
-
-// Botão de tocar música
+let tag=document.createElement('script'); tag.src="https://www.youtube.com/iframe_api"; document.body.appendChild(tag);
 document.getElementById('playMusic').addEventListener('click',()=>{
   if(player && player.playVideo) player.playVideo();
   document.getElementById('playMusic').style.display='none';
 });
 
-// Botões Sim / Não
-const startBtn = document.getElementById('startTimer');
-const noBtn = document.getElementById('noBtn');
-const thanks = document.getElementById('thanks');
-startBtn.addEventListener('click',()=>{
-  if(!localStorage.getItem('proposalStart')) localStorage.setItem('proposalStart',Date.now());
-  document.getElementById('timer').scrollIntoView({behavior:'smooth'});
-  initTimer();
-});
-noBtn.addEventListener('click',()=>{thanks.scrollIntoView({behavior:'smooth'});});
-const thanksYes = document.getElementById('thanksYes');
-const thanksNo = document.getElementById('thanksNo');
-thanksYes.addEventListener('click',()=>{
-  if(!localStorage.getItem('proposalStart')) localStorage.setItem('proposalStart',Date.now());
-  document.getElementById('timer').scrollIntoView({behavior:'smooth'});
-  initTimer();
-});
-thanksNo.addEventListener('mouseenter',()=>{
-  const parentRect = thanksNo.parentElement.getBoundingClientRect();
-  thanksNo.style.left = Math.random()*(parentRect.width-50)+'px';
-  thanksNo.style.top = Math.random()*(parentRect.height-30)+'px';
-});
-
-// Temporizador de 3 meses
-let timerInterval;
-function initTimer(){
-  const start = new Date(parseInt(localStorage.getItem('proposalStart')));
-  const end = new Date(start.getFullYear(), start.getMonth()+3, start.getDate(), start.getHours(), start.getMinutes(), start.getSeconds());
-  if(timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(()=>{
-    const now = new Date();
-    let diff = Math.floor((end - now)/1000);
-    if(diff<0) diff=0;
-    const months = Math.floor(diff/(30*24*3600));
-    const days = Math.floor(diff/86400);
-    diff%=86400;
-    const hours = Math.floor(diff/3600);
-    diff%=3600;
-    const minutes = Math.floor(diff/60);
-    const seconds = diff%60;
-    document.getElementById('t_months').textContent=months;
-    document.getElementById('t_days').textContent=days;
-    document.getElementById('t_hours').textContent=String(hours).padStart(2,'0');
-    document.getElementById('t_minutes').textContent=String(minutes).padStart(2,'0');
-    document.getElementById('t_seconds').textContent=String(seconds).padStart(2,'0');
-  },1000);
-}
-if(localStorage.getItem('proposalStart')) initTimer();
-</script>
-</body>
-</html>
+// --- Botões Sim/Não ---
+const startBtn=document.getElementById('startTimer');
+const noBtn=document.getElementById('noBtn');
+const thanks=document.getElementById('thanks');
+startBtn.addEventListener('c
