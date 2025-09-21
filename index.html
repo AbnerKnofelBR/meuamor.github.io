@@ -80,7 +80,7 @@
         playBtn.addEventListener('click',()=>{
           if(!ytReady||!player){alert('Carregando player... aguarde');return;}
           try{player.playVideo();}catch(err){console.error(err);} 
-          
+          overlay.style.display='none';
         });
       }
     })();
