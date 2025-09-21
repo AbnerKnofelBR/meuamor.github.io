@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pedido de Namoro - Temporizador (corrigido)</title>
+  <title>Pedido de Namoro - Temporizador</title>
   <style>
     :root{--bg:#0b0810;--accent:#ff5b8a;--muted:#e9e7ee}
     html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue';background:var(--bg);color:var(--muted);}
@@ -359,8 +359,8 @@
                 try{
                   player = new YT.Player('player',{
                     height: '0', width: '0',
-                    videoId: 'YOUR_VIDEO_ID_HERE',
-                    playerVars: {'playsinline':1,'autoplay':0,'loop':1,'mute':1,'playlist':'YOUR_VIDEO_ID_HERE'},
+                    videoId: 'https://www.youtube.com/watch?v=XdglM81b4g8',
+                    playerVars: {'playsinline':1,'autoplay':0,'loop':1,'mute':1,'https://www.youtube.com/watch?v=XdglM81b4g8'},
                     events: { 'onReady': function(){ ytReady = true; } }
                   });
                 }catch(err){ console.error('YT player init error', err); }
@@ -402,3 +402,4 @@
   </script>
 </body>
 </html>
+
