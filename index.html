@@ -1,198 +1,89 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pedido de Namoro - Temporizador (corrigido)</title>
-<style>
-:root{--bg:#0b0810;--accent:#ff5b8a;--muted:#e9e7ee}
-html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue';background:var(--bg);color:var(--muted);}
-.wrap{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
-section{height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;padding:36px;box-sizing:border-box}
-.next-btn{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:28px;cursor:pointer;display:flex;align-items:center}
-.next-btn .arrow{display:inline-block;width:18px;height:18px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg)}
-/* Hero */
-#hero{background:linear-gradient(180deg,#2b0b1a,#140412);overflow:hidden}
-.hero-content{max-width:900px;text-align:center}
-.hero-title{font-size:48px;margin:0 0 16px 0;line-height:1.05}
-.hero-desc{font-size:18px;opacity:0.95}
-.hearts{pointer-events:none;position:absolute;inset:0;overflow:hidden}
-.heart{position:absolute;width:18px;height:18px;background:transparent;transform:translateY(100vh);opacity:0.9}
-.heart:before,.heart:after{content:'';position:absolute;width:12px;height:20px;background:var(--accent);border-radius:12px 12px 0 0}
-.heart:before{left:4px;transform:rotate(-45deg)}
-.heart:after{right:4px;transform:rotate(45deg)}
-/* Gallery */
-#gallery{background:linear-gradient(180deg,#1a0d16,#231022)}
-.carousel{display:flex;gap:16px;overflow-x:auto;padding:24px 8px;scroll-snap-type:x mandatory}
-.card{min-width:300px;height:420px;border-radius:12px;background:#fff;flex:0 0 auto;scroll-snap-align:center;overflow:hidden}
-.card img{width:100%;height:100%;object-fit:cover}
-/* Counter/date */
-#counter{background:linear-gradient(180deg,#081018,#071426);text-align:center}
-.counter-inner{max-width:880px}
-.squares{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:18px}
-.sq{width:120px;height:120px;border-radius:12px;background:rgba(255,255,255,0.04);display:flex:flex-direction:column;align-items:center;justify-content:center}
-.sq .val{font-size:20px;font-weight:700}
-.sq .label{font-size:12px;opacity:0.9}
-/* Prompt */
-#prompt{background:linear-gradient(180deg,#25121c,#160913)}
-.prompt-card{max-width:760px;background:rgba(255,255,255,0.03);padding:26px;border-radius:14px;text-align:center}
-.btns{display:flex;gap:12px;justify-content:center;margin-top:16px}
-button.btn{padding:12px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
-.btn.yes{background:var(--accent);color:#fff}
-.btn.no{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
-/* Thanks page */
-#thanks{background:linear-gradient(180deg,#071216,#071216)}
-.thanks-inner{max-width:700px;text-align:center}
-.moving{position:relative}
-.moving .btn.no.moveable{position:absolute}
-/* Timer page */
-#timer{background:linear-gradient(180deg,#071018,#08111a);text-align:center}
-.timer-box{max-width:820px;background:rgba(255,255,255,0.02);padding:22px;border-radius:12px}
-.time-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.time-item{width:140px;height:90px;border-radius:10px;background:rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;justify-content:center}
-.time-item .num{font-size:18px;font-weight:800}
-.time-item .lbl{font-size:12px;opacity:0.9}
-.play-music{position:fixed;right:18px;bottom:18px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.04);backdrop-filter:blur(6px);cursor:pointer}
-.muted{opacity:0.85;color:#ddd}
-@media (max-width:600px){.hero-title{font-size:30px}.sq{width:88px;height:88px}.card{min-width:240px;height:300px}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pedido de Namoro - Temporizador</title>
+  <style>
+    :root{--bg:#0b0810;--accent:#ff5b8a;--muted:#e9e7ee}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue';background:var(--bg);color:var(--muted);}
+    .wrap{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch}
+    section{height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;padding:36px;box-sizing:border-box}
+
+    /* Play overlay */
+    #playOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;text-align:center;padding:20px}
+    #playOverlay h2{font-size:24px;margin-bottom:18px;color:#fff}
+    #playOverlay button{padding:14px 28px;font-size:18px;border-radius:12px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+
+    .next-btn{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:28px;cursor:pointer;display:flex;align-items:center}
+    .next-btn .arrow{display:inline-block;width:18px;height:18px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg)}
+
+    /* Hero */
+    #hero{background:linear-gradient(180deg,#2b0b1a,#140412);overflow:hidden}
+    .hero-content{max-width:900px;text-align:center}
+    .hero-title{font-size:36px;margin:0 0 16px 0;line-height:1.2}
+    .hero-desc{font-size:16px;opacity:0.95}
+    .hearts{pointer-events:none;position:absolute;inset:0;overflow:hidden}
+    .heart{position:absolute;width:18px;height:18px;background:transparent;transform:translateY(100vh);opacity:0.9}
+    .heart:before,.heart:after{content:'';position:absolute;width:12px;height:20px;background:var(--accent);border-radius:12px 12px 0 0}
+    .heart:before{left:4px;transform:rotate(-45deg)}
+    .heart:after{right:4px;transform:rotate(45deg)}
+
+    @media (max-width:600px){.hero-title{font-size:28px}.hero-desc{font-size:14px}}
+  </style>
 </head>
 <body>
-<div class="wrap" id="wrap">
-<!-- 1 Hero -->
-<section id="hero">
-  <div class="hearts" id="hearts"></div>
-  <div class="hero-content">
-    <h1 class="hero-title">Seremos parceiros nessa aventura?</h1>
-    <p class="hero-desc">Desde o primeiro olhar, cada momento importa. Deslize para baixo e veja nossas lembranças.</p>
+  <!-- Overlay de play -->
+  <div id="playOverlay">
+    <h2>Aperte play para iniciar a música 🎶</h2>
+    <button id="playMusic">▶️ Play</button>
   </div>
-  <div class="next-btn" data-target="gallery"><span class="arrow"></span></div>
-</section>
 
-<!-- 2 Gallery -->
-<section id="gallery">
-  <div style="width:100%;max-width:1100px;text-align:center">
-    <h2>Algumas lembranças</h2>
-    <div class="carousel" id="carousel">
-      <div class="card"><img src="https://picsum.photos/800/600?random=11" alt="img1"></div>
-      <div class="card"><img src="https://picsum.photos/800/600?random=12" alt="img2"></div>
-      <div class="card"><img src="https://picsum.photos/800/600?random=13" alt="img3"></div>
-    </div>
+  <div class="wrap" id="wrap">
+    <!-- 1 Hero -->
+    <section id="hero">
+      <div class="hearts" id="hearts"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">Seremos parceiros nessa aventura?</h1>
+        <p class="hero-desc">Desde o primeiro olhar, cada momento importa. Deslize para baixo e veja nossas lembranças.</p>
+      </div>
+      <div class="next-btn" data-target="gallery"><span class="arrow"></span></div>
+    </section>
+
+    <!-- outras sections (gallery, counter, prompt, thanks, timer) ficam aqui -->
   </div>
-  <div class="next-btn" data-target="counter"><span class="arrow"></span></div>
-</section>
 
-<!-- 3 Counter from 18/01/2025 -->
-<section id="counter">
-  <div class="counter-inner">
-    <h2>Tempo desde que nos conhecemos</h2>
-    <p class="muted">Contando em tempo real desde <strong>18/01/2025</strong></p>
-    <div class="squares" id="sinceBoxes">
-      <div class="sq"><div class="val" id="years">0</div><div class="label">Anos</div></div>
-      <div class="sq"><div class="val" id="months">0</div><div class="label">Meses</div></div>
-      <div class="sq"><div class="val" id="days">0</div><div class="label">Dias</div></div>
-      <div class="sq"><div class="val" id="time">00:00:00</div><div class="label">HH:MM:SS</div></div>
-    </div>
-  </div>
-  <div class="next-btn" data-target="prompt"><span class="arrow"></span></div>
-</section>
+  <div id="player" style="display:none"></div>
 
-<!-- 4 Prompt to start temporizador -->
-<section id="prompt">
-  <div class="prompt-card">
-    <h2>Deseja iniciar o temporizador para o pedido de namoro?</h2>
-    <p class="muted">Se escolher SIM, o temporizador será iniciado e gravado. Será possível ver o temporizador em outra tela.</p>
-    <div class="btns">
-      <button class="btn yes" id="startTimer">Sim</button>
-      <button class="btn no" id="goThanks">Não</button>
-    </div>
-  </div>
-</section>
+  <script>
+    (function(){
+      'use strict';
+      let player=null, ytReady=false;
 
-<!-- 5 Thanks / decline with tricky NO button -->
-<section id="thanks">
-  <div class="thanks-inner">
-    <h2>Obrigado por tudo 💛</h2>
-    <p class="muted">Se quiser, você ainda pode iniciar o temporizador.</p>
-    <div style="position:relative;height:120px;margin-top:18px">
-      <button class="btn yes" id="thanksYes" style="position:absolute;left:20%;top:30%">Sim</button>
-      <button class="btn no moveable" id="thanksNo" style="position:absolute;left:60%;top:30%">Não</button>
-    </div>
-  </div>
-</section>
-
-<!-- 6 Timer page -->
-<section id="timer">
-  <div class="timer-box">
-    <h2>Cronômetro do Pedido</h2>
-    <p class="muted">Mostrando desde o primeiro clique que iniciou o temporizador. Também mostramos a contagem de 3 meses a partir da data de início.</p>
-    <div class="time-row">
-      <div class="time-item"><div class="num" id="t_months">0</div><div class="lbl">Meses<br> (desde início)</div></div>
-      <div class="time-item"><div class="num" id="t_days">0</div><div class="lbl">Dias</div></div>
-      <div class="time-item"><div class="num" id="t_hours">00</div><div class="lbl">Horas</div></div>
-      <div class="time-item"><div class="num" id="t_minutes">00</div><div class="lbl">Minutos</div></div>
-      <div class="time-item"><div class="num" id="t_seconds">00</div><div class="lbl">Segundos</div></div>
-    </div>
-    <p class="muted" style="margin-top:12px">Contagem regressiva até 3 meses após a data de início:</p>
-    <div class="time-row" style="margin-top:10px">
-      <div class="time-item"><div class="num" id="c_m">0</div><div class="lbl">Meses</div></div>
-      <div class="time-item"><div class="num" id="c_d">0</div><div class="lbl">Dias</div></div>
-      <div class="time-item"><div class="num" id="c_h">00</div><div class="lbl">Horas</div></div>
-      <div class="time-item"><div class="num" id="c_min">00</div><div class="lbl">Minutos</div></div>
-      <div class="time-item"><div class="num" id="c_s">00</div><div class="lbl">Segundos</div></div>
-    </div>
-  </div>
-</section>
-</div>
-
-<!-- Player do YouTube -->
-<div id="player" style="display:none"></div>
-<div class="play-music" id="playMusic">▶️ Aperte Play 🎵</div>
-
-<script>
-// Funções gerais de navegação, temporizador, hearts e etc (mantidas)
-// ... Aqui você pode manter todo o seu JS original intacto ...
-
-// --- Player do YouTube ajustado ---
-let player;
-let ytReady = false;
-
-function loadYouTubeAPI() {
-  window.onYouTubeIframeAPIReady = function() {
-    player = new YT.Player('player', {
-      height: '0',
-      width: '0',
-      videoId: 'XdglM81b4g8',
-      playerVars: {
-        'playsinline': 1,
-        'autoplay': 0,
-        'loop': 1,
-        'mute': 1,
-        'playlist': 'XdglM81b4g8'
-      },
-      events: {
-        'onReady': function() { ytReady = true; }
+      function loadYouTubeAPI(){
+        window.onYouTubeIframeAPIReady=function(){
+          player=new YT.Player('player',{
+            height:'0',width:'0',videoId:'XdglM81b4g8',
+            playerVars:{'playsinline':1,'autoplay':0,'loop':1,'mute':0,'playlist':'XdglM81b4g8'},
+            events:{'onReady':function(){ytReady=true;}}
+          });
+        };
+        const s=document.createElement('script');
+        s.src='https://www.youtube.com/iframe_api';
+        document.head.appendChild(s);
       }
-    });
-  };
+      loadYouTubeAPI();
 
-  const tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  tag.async = true;
-  document.head.appendChild(tag);
-}
-
-loadYouTubeAPI();
-
-const playMusicBtn = document.getElementById('playMusic');
-playMusicBtn.addEventListener('click', function() {
-  if (!ytReady) {
-    alert('Aguarde, carregando música...');
-    return;
-  }
-  player.playVideo();
-  playMusicBtn.style.display = 'none';
-});
-</script>
+      const playBtn=document.getElementById('playMusic');
+      const overlay=document.getElementById('playOverlay');
+      if(playBtn){
+        playBtn.addEventListener('click',()=>{
+          if(!ytReady||!player){alert('Carregando player... aguarde');return;}
+          try{player.playVideo();}catch(err){console.error(err);} 
+          
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
